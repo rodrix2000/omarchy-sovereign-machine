@@ -65,6 +65,12 @@ The Pages project is associated with `omarchy.rudyr.com`. Its DNS record is:
 Only this exact record was added. The apex, `www`, wildcard and other services
 were not changed. Cloudflare handles the site's HTTPS certificate.
 
+An active Cache Rule named `Omarchy preview — respect origin cache headers`
+matches only `(http.host eq "omarchy.rudyr.com")`. It sets Browser TTL to
+**Respect origin TTL**, with cache eligibility still governed by origin headers
+and no Edge TTL override. This prevents the zone's four-hour browser default
+from replacing the preview's `no-cache` header. Main-site caching is unchanged.
+
 ## Verification and rollback
 
 Check the HTTPS homepage, all local homepage links/assets, the theme controls,
