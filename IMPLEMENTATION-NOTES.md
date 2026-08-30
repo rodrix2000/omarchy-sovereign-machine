@@ -166,6 +166,52 @@ keyboard default actions because the browser test interface did not advance
 native controls with Arrow, Space or Tab. No custom keyboard interception was
 added. No-JavaScript fallback coverage in this pass is source-based.
 
+### Homepage-wide palettes and header dropdown — 2026-08-30
+
+Starting from `881bed54a2f2172b455744ad32d67c2f232969e8`, selecting any of the six
+desktop themes applies a coordinated palette across the redesigned homepage:
+section backgrounds and gradients, text, buttons, focus accents, terminal panes,
+video play buttons and footer. A compact, labeled native select in the sticky
+header offers the same six choices plus **Sovereign**, the original default and
+reset option. The desktop screenshot, radio selection, dropdown and polite live
+status are synchronized. Sovereign has no selected desktop radio; its caption
+explicitly identifies the unchanged Tokyo Night screenshot as a desktop preview.
+
+This is a theme-inspired adaptation of page colors, not an OS theme installer.
+Official green logo assets, photographs and screenshots remain unmodified.
+The scope is the entire redesigned homepage, not the inherited manual, gallery
+or other secondary pages. Global upstream root tokens and layouts are untouched.
+
+Files: `index.html`, `assets/css/home.css`, new `assets/css/home-themes.css`,
+`assets/js/modules/home.js`, new `assets/js/theme-preference.js`,
+`tests/home-themes.mjs`, `bin/check`, `README.md` and this document.
+The existing design tokens remain the original fallback. Six optional CSS
+palettes override their values and derive coherent panel/border/gradient tones.
+The small early script restores an allowlisted saved preference before styles
+render. The main module handles controls and same-origin storage events; both
+storage access paths tolerate blocked storage and reject unknown values.
+Only `omarchy-sovereign-theme` is stored locally, with no transmission or tracking.
+Existing button movement remains, but palette color changes are immediate.
+
+The dropdown is hidden until initialized; without JavaScript the original
+design, default screenshot and all six static screenshot links remain available.
+No dependencies, image assets or theme animations were added. The inherited
+reduced-motion behavior and all homepage destination/download link policies are
+preserved.
+
+Regression coverage now includes both control directions for all six themes,
+original reset, saved and invalid values, blocked storage, cross-tab events,
+early restoration and static fallback links. All seven palettes meet 4.5:1 for
+the tested text/muted/accent roles on solid raised panels and primary-button
+text. This is a scoped contrast check, not a claim of full accessibility audit.
+Browser checks exercised all options, swatches, reload restoration, second-tab
+restoration and live cross-tab synchronization. Header layouts were checked at
+320, 390, 768, 1024 and 1440px without overlap or horizontal overflow. The mobile
+menu still opens, navigates to the themes section and closes after activation.
+Screenshots were visually reviewed; no-JavaScript fallback and reduced motion
+were checked by the source/regression suite. The prior keyboard-test-tool
+limitation remains; controls retain native select/radio semantics.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation

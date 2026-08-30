@@ -26,6 +26,10 @@ community. Text, navigation, controls and terminal output are code-native.
 The six-theme preview pairs Tokyo Night, Catppuccin and Gruvbox with Black Gold,
 Black Turq and VHS 80 from the official theme gallery: gold, phosphor turquoise
 and retro tape colors that complement the Sovereign Machine direction.
+Selecting a swatch now applies that palette across the redesigned homepage.
+A matching header dropdown includes **Sovereign**, which restores the original
+design. The preference is saved locally and synchronized between homepage tabs;
+no operating-system settings or inherited secondary pages are changed.
 
 ## Run locally
 

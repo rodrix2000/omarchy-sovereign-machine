@@ -26,10 +26,12 @@
     <link rel="canonical" href="https://omarchy.org/">
     <link rel="icon" href="/assets/images/favicon.png">
 
+    <script src="/assets/js/theme-preference.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/css/reset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/root.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/fonts.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/home.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/home-themes.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/video.css">
 
     <script src="/assets/js/script.js" type="module"></script>
@@ -58,6 +60,19 @@
           <a href="#community">Community</a>
           <a href="/manual/" target="_blank" rel="noopener noreferrer" aria-label="Manual (opens in a new tab)">Manual</a>
         </div>
+
+        <label class="site-theme" hidden>
+          <span class="site-theme__label">Theme</span>
+          <select name="site-theme" aria-label="Site color theme" data-site-theme-select>
+            <option value="sovereign" selected>Sovereign</option>
+            <option value="tokyo-night">Tokyo Night</option>
+            <option value="catppuccin">Catppuccin</option>
+            <option value="gruvbox">Gruvbox</option>
+            <option value="black-gold">Black Gold</option>
+            <option value="black-turq">Black Turq</option>
+            <option value="vhs-80">VHS 80</option>
+          </select>
+        </label>
 
         <a class="sm-button sm-button--primary site-nav__cta" href="https://iso.omarchy.org/omarchy-4.0.1.iso" aria-label="Download the current Omarchy ISO">
           <span class="site-nav__cta-long">Get Omarchy</span>
@@ -276,9 +291,9 @@
           <div class="theme-workbench" data-theme-preview="tokyo-night">
             <div class="theme-toolbar">
               <fieldset class="theme-selector">
-                <legend>Choose a theme preview</legend>
+                <legend>Choose a desktop theme and apply its palette to this page</legend>
                 <label>
-                  <input type="radio" name="theme-preview" value="tokyo-night" checked>
+                  <input type="radio" name="theme-preview" value="tokyo-night">
                   <span class="theme-swatch theme-swatch--tokyo" aria-hidden="true"></span>
                   Tokyo Night
                 </label>
@@ -308,7 +323,7 @@
                   VHS 80
                 </label>
               </fieldset>
-              <p class="theme-workbench__note">Preview only. Your system stays untouched.</p>
+              <p class="theme-workbench__note">Try a palette across this page. Your system stays untouched.</p>
             </div>
             <noscript>
               <p class="theme-workbench__fallback">
@@ -323,7 +338,7 @@
             </noscript>
             <figure class="theme-preview">
               <img data-theme-image src="/manual/images/tokyo-night-preview.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Tokyo Night theme running across an Omarchy desktop">
-              <figcaption data-theme-status aria-live="polite">Tokyo Night preview selected.</figcaption>
+              <figcaption data-theme-status aria-live="polite">Original site palette · Tokyo Night desktop preview.</figcaption>
             </figure>
           </div>
         </div>

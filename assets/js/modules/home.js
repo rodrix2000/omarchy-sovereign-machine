@@ -31,6 +31,8 @@ const THEMES = {
   },
 };
 
+const THEME_STORAGE_KEY = 'omarchy-sovereign-theme';
+
 const COMMAND_TEXT = `~ > omarchy
 Omarchy command center
 
@@ -96,22 +98,62 @@ function setupPaneFocus() {
 function setupThemePreview() {
   const preview = document.querySelector('[data-theme-preview]');
   const image = preview?.querySelector('[data-theme-image]');
-  const name = preview?.querySelector('[data-theme-name]');
   const status = preview?.querySelector('[data-theme-status]');
   if (!(preview instanceof HTMLElement) || !(image instanceof HTMLImageElement)) return;
 
-  document.querySelectorAll('input[name="theme-preview"]').forEach((input) => {
+  const select = document.querySelector('[data-site-theme-select]');
+  const controls = document.querySelectorAll('input[name="theme-preview"]');
+  const validTheme = (value) => value === 'sovereign' || Object.hasOwn(THEMES, value);
+
+  const applyTheme = (value, persist = false) => {
+    const selected = validTheme(value) ? value : 'sovereign';
+    const previewKey = selected === 'sovereign' ? 'tokyo-night' : selected;
+    const theme = THEMES[previewKey];
+
+    document.documentElement.dataset.siteTheme = selected;
+    preview.dataset.themePreview = previewKey;
+    image.src = theme.image;
+    image.alt = theme.alt;
+    controls.forEach((input) => { input.checked = input.value === selected; });
+    if (select instanceof HTMLSelectElement) select.value = selected;
+    if (status != null) {
+      status.textContent = selected === 'sovereign'
+        ? 'Original site palette · Tokyo Night desktop preview.'
+        : `${theme.name} palette applied to this page · ${theme.name} desktop preview.`;
+    }
+
+    if (persist) {
+      try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, selected);
+      } catch {
+        // The control still works when browser storage is unavailable.
+      }
+    }
+  };
+
+  let savedTheme = 'sovereign';
+  try {
+    savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY) ?? 'sovereign';
+  } catch {
+    // Keep the original palette if storage is blocked or unavailable.
+  }
+  applyTheme(savedTheme);
+
+  controls.forEach((input) => {
     input.addEventListener('change', () => {
       if (!(input instanceof HTMLInputElement) || !input.checked) return;
-      const theme = THEMES[input.value];
-      if (theme == null) return;
-
-      preview.dataset.themePreview = input.value;
-      image.src = theme.image;
-      image.alt = theme.alt;
-      if (name != null) name.textContent = theme.name;
-      if (status != null) status.textContent = `${theme.name} preview selected.`;
+      if (validTheme(input.value)) applyTheme(input.value, true);
     });
+  });
+
+  if (select instanceof HTMLSelectElement) {
+    select.addEventListener('change', () => applyTheme(select.value, true));
+    const label = select.closest('.site-theme');
+    if (label instanceof HTMLElement) label.hidden = false;
+  }
+
+  window.addEventListener('storage', (event) => {
+    if (event.key === THEME_STORAGE_KEY || event.key === null) applyTheme(event.newValue);
   });
 }
 
