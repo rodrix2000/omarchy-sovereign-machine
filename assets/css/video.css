@@ -47,11 +47,13 @@
   background: var(--color-background-storm);
   border: none;
   border-radius: 0.4em;
+  color: inherit;
   cursor: pointer;
   display: block;
   overflow: hidden;
   padding: 0;
   position: relative;
+  text-decoration: none;
   width: 100%;
 }
 

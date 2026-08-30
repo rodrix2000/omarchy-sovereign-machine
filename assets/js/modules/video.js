@@ -1,6 +1,6 @@
-// Videos start as a poster and a play button. Nothing is requested from
-// YouTube until someone clicks, which keeps the third-party embed (and its
-// cookies and scripts) off the initial page load entirely.
+// Videos start as linked posters. A poster with data-video upgrades to an
+// inline player; all other posters remain ordinary YouTube links. Nothing is
+// requested from YouTube until someone chooses a video.
 
 const PARAMS = 'autoplay=1&rel=0';
 
@@ -21,8 +21,11 @@ function embed(facade) {
 }
 
 function ready() {
-  for (const facade of document.querySelectorAll('.video__facade')) {
-    facade.addEventListener('click', () => embed(facade), { once: true });
+  for (const facade of document.querySelectorAll('.video__facade[data-video]')) {
+    facade.addEventListener('click', (event) => {
+      event.preventDefault();
+      embed(facade);
+    }, { once: true });
   }
 }
 

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="120" height="140">
+  <title>The Omarchs court jester</title>
+  <!-- Artwork from https://github.com/omacom/omarchs/blob/main/index.html, also used on https://omarchs.fyi/. -->
+  <defs>
+    <linearGradient id="jgold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6d98d"/><stop offset="1" stop-color="#b8862a"/>
+    </linearGradient>
+    <linearGradient id="jpurple" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8f52ff"/><stop offset="1" stop-color="#3d1580"/>
+    </linearGradient>
+    <radialGradient id="jbell" cx="0.35" cy="0.3" r="0.75">
+      <stop offset="0" stop-color="#fff3cd"/><stop offset="0.55" stop-color="#e8bd5c"/><stop offset="1" stop-color="#a87620"/>
+    </radialGradient>
+  </defs>
+
+  <!-- collar: a fan of motley points, belled at the tips -->
+  <path d="M28 100 L34 118 L42 102 L51 120 L60 103 L69 120 L78 102 L86 118 L92 100 Z"
+        fill="url(#jpurple)" stroke="#d9a93f" stroke-width="2" stroke-linejoin="round"/>
+  <g fill="url(#jbell)" stroke="#a87620" stroke-width="1">
+    <circle cx="34" cy="120" r="3"/><circle cx="51" cy="122" r="3.2"/>
+    <circle cx="69" cy="122" r="3.2"/><circle cx="86" cy="120" r="3"/>
+  </g>
+
+  <!-- head -->
+  <path d="M34 56 C32 82 45 102 60 102 C75 102 88 82 86 56 Z"
+        fill="#150a2b" stroke="#d9a93f" stroke-width="2"/>
+
+  <!-- mask -->
+  <path d="M33 60 L46 54 L60 59 L74 54 L87 60 L84 74 L64 77 L60 73 L56 77 L36 74 Z"
+        fill="#0b0518" stroke="#d9a93f" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M43 65 L53 63 L51 70 Z M77 65 L67 63 L69 70 Z" fill="#f3cf7a"/>
+
+  <!-- sly grin -->
+  <path d="M49 86 Q60 96 71 86" fill="none" stroke="#d9a93f" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M49 86 l-2.5 -4 M71 86 l2.5 -4" stroke="#d9a93f" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- cap: three sharp points, true motley -->
+  <path d="M60 12 L58 58 L34 60 C28 50 20 40 10 32 C24 34 34 32 44 24 L52 18 Z"
+        fill="url(#jgold)" stroke="#d9a93f" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M60 12 L62 58 L86 60 C92 50 100 40 110 32 C96 34 86 32 76 24 L68 18 Z"
+        fill="url(#jpurple)" stroke="#d9a93f" stroke-width="2.2" stroke-linejoin="round"/>
+
+  <!-- circuit traces, as on Their Majesties' armor -->
+  <g stroke-width="1.1" fill="none" opacity="0.8" stroke-linecap="round">
+    <path d="M38 50 L38 40 L28 36 M38 44 L46 44" stroke="#5a24c9"/>
+    <path d="M82 50 L82 40 L92 36 M82 44 L74 44" stroke="#f3cf7a"/>
+  </g>
+  <circle cx="28" cy="36" r="1.6" fill="#5a24c9"/><circle cx="46" cy="44" r="1.4" fill="#5a24c9"/>
+  <circle cx="92" cy="36" r="1.6" fill="#f3cf7a"/><circle cx="74" cy="44" r="1.4" fill="#f3cf7a"/>
+
+  <!-- bells -->
+  <g class="bells">
+    <circle cx="60" cy="10" r="7.5" fill="url(#jbell)" stroke="#a87620" stroke-width="1.2"/>
+    <circle cx="9" cy="31" r="7" fill="url(#jbell)" stroke="#a87620" stroke-width="1.2"/>
+    <circle cx="111" cy="31" r="7" fill="url(#jbell)" stroke="#a87620" stroke-width="1.2"/>
+    <g fill="#fff8e0" opacity="0.9">
+      <circle cx="57.6" cy="7.6" r="1.7"/><circle cx="6.6" cy="28.6" r="1.6"/><circle cx="108.6" cy="28.6" r="1.6"/>
+    </g>
+  </g>
+</svg>

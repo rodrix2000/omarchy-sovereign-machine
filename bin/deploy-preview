@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# Explicitly publish only the isolated Omarchy preview project.
+require "open3"
+
+root = File.expand_path("..", __dir__)
+branch = "design/sovereign-machine-homepage"
+current_branch, status = Open3.capture2("git", "-C", root, "branch", "--show-current")
+abort "Deploy from #{branch}, not #{current_branch.strip}" unless status.success? && current_branch.strip == branch
+
+abort "Pre-deployment checks failed" unless system("ruby", File.join(__dir__, "check"))
+output, status = Open3.capture2("ruby", File.join(__dir__, "prepare-preview"))
+abort "Preview packaging failed" unless status.success?
+directory = output.strip
+abort "Unexpected preview output directory" unless directory.start_with?("#{root}/.cloudflare/omarchy-preview-") && File.directory?(directory)
+changes, status = Open3.capture2("git", "-C", root, "status", "--porcelain")
+abort "Could not read working-tree status" unless status.success?
+dirty = !changes.strip.empty?
+
+# Pin tooling without adding a package manifest or a production dependency.
+Dir.chdir(root) do
+  exec({ "CLOUDFLARE_ACCOUNT_ID" => "ef225ac2b3d751ee20ce2435d0df4563" },
+    "npx", "--yes", "wrangler@4.119.0", "pages", "deploy", directory,
+    "--project-name", "omarchy-sovereign-machine", "--branch", branch,
+    "--commit-dirty=#{dirty}")
+end

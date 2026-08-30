@@ -1,0 +1,29 @@
+# Local publish output and credentials
+/.cloudflare/
+/.wrangler/
+/node_modules/
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+*.log
+.DS_Store
+
+# Keep research, handoff material, drafts and working captures outside this repo.
+/omarchy-sovereign-machine-handoff/
+/*handoff*/
+/*handout*/
+/*handoff*.zip
+/SUBMISSION-EMAIL.md
+/artifacts/
+/private/
+/scratch/
+/tmp/
+/AGENTS.md
+/.codex/
+# Approved public screenshots belong only in docs/screenshots/.
+/*.png
+/*.jpg
+/*.jpeg

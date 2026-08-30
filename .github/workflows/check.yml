@@ -1,0 +1,25 @@
+name: Validate static homepage
+
+on:
+  push:
+    branches: [design/sovereign-machine-homepage]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check source, routes, licenses and reduced motion
+        run: ruby bin/check
+      - name: Validate homepage HTML
+        run: npx --yes html-validate@10.4.0 index.html
+      - name: Validate public deployment package
+        run: ruby bin/prepare-preview

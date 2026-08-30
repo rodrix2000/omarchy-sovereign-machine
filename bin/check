@@ -1,0 +1,83 @@
+#!/usr/bin/env ruby
+# Dependency-free, offline preflight for this static homepage and public checkout.
+require "cgi"
+require "open3"
+require "rbconfig"
+require "uri"
+
+root = File.expand_path("..", __dir__)
+
+def run!(*command, **options)
+  output, status = Open3.capture2e(*command, **options)
+  abort "Failed: #{command.join(' ')}\n#{output}" unless status.success?
+  output
+end
+
+Dir.chdir(root) do
+  tracked = run!("git", "ls-files", "-z").split("\0")
+  private_paths = tracked.select do |path|
+    path.match?(%r{(?:\A|/)(?:[^/]*(?:handoff|handout)[^/]*|\.env(?:\.[^/]*)?|\.dev\.vars(?:\.[^/]*)?|\.cloudflare|\.wrangler|\.cache|\.codex|node_modules|artifacts|private|\.DS_Store)(?:/|\z)}i) ||
+      path.match?(%r{(?:\A|/)(?:SUBMISSION-EMAIL[^/]*|credentials[^/]*|secrets?[^/]*|id_rsa[^/]*|id_ed25519[^/]*)(?:/|\z)}i) ||
+      path.match?(/\.(?:log|pem|key|p12)\z/i)
+  end
+  # Never inspect or echo the contents of anything rejected here.
+  abort "Public checkout contains #{private_paths.length} prohibited tracked private/cache file(s). Inspect git ls-files before publishing." unless private_paths.empty?
+
+  %w[bin/serve bin/prepare-preview bin/deploy-preview bin/check].each do |path|
+    run!(RbConfig.ruby, "-c", path)
+  end
+  %w[assets/js/script.js assets/js/modules/home.js assets/js/modules/video.js].each do |path|
+    run!("node", "--input-type=module", "--check", stdin_data: File.read(path))
+  end
+  run!("git", "diff", "--check")
+  run!("git", "diff", "--cached", "--check")
+
+  licenses = %w[LICENSE.md LICENSES/MIT-redesign.txt assets/fonts/OFL.txt assets/js/wte/LICENSE-ttfx.txt]
+  missing_licenses = licenses.reject { |path| File.file?(path) && File.size?(path) }
+  abort "Missing required license notices: #{missing_licenses.join(', ')}" unless missing_licenses.empty?
+
+  html = File.read("index.html").gsub(/<!--.*?-->/m, "")
+  tags = html.scan(/<([a-z][a-z0-9:-]*)\b([^>]*)>/i).map do |name, content|
+    attributes = content.scan(/\s([a-z][\w:-]*)\s*=\s*(["'])(.*?)\2/im).to_h do |key, _quote, value|
+      [key.downcase, CGI.unescapeHTML(value)]
+    end
+    [name.downcase, attributes]
+  end
+  ids = tags.filter_map { |_name, attributes| attributes["id"] }
+  duplicates = ids.group_by(&:itself).select { |_id, matches| matches.length > 1 }.keys
+  abort "Duplicate homepage IDs: #{duplicates.join(', ')}" unless duplicates.empty?
+  abort "Homepage must contain exactly one h1" unless tags.count { |name, _attributes| name == "h1" } == 1
+
+  required_ids = %w[main hero-heading watch system themes agents explore community]
+  abort "Missing homepage sections: #{(required_ids - ids).join(', ')}" unless (required_ids - ids).empty?
+  tags.each do |_name, attributes|
+    references = attributes.fetch("aria-labelledby", "").split
+    href = attributes["href"]
+    references << URI::DEFAULT_PARSER.unescape(href.delete_prefix("#")) if href&.start_with?("#")
+    abort "Unresolved homepage fragment/label: #{(references - ids).join(', ')}" unless (references - ids).empty?
+  end
+
+  hrefs = tags.filter_map { |name, attributes| attributes["href"] if name == "a" }
+  abort "Homepage has an empty or JavaScript-only link" if hrefs.any? { |href| href.empty? || href.match?(/\Ajavascript:/i) }
+  resources = tags.flat_map { |_name, attributes| attributes.values_at("href", "src") }.compact
+  local_paths = resources.select { |value| value.start_with?("/") && !value.start_with?("//") }.map { |value| value.split(/[?#]/, 2).first }.uniq
+  local_paths.each do |path|
+    target = File.expand_path(".#{URI::DEFAULT_PARSER.unescape(path)}", root)
+    abort "Homepage path escapes the public checkout" unless target == root || target.start_with?("#{root}/")
+    exists = [target, "#{target}.html", File.join(target, "index.html")].any? { |candidate| File.file?(candidate) }
+    abort "Missing homepage link/asset: #{path}" unless exists
+  end
+
+  video_ids = %w[F7fe9pa8OeE 9SDkU5VDQEQ 5JPYJfN7HY0 qBKMe8AatY0 KO2T0oET9go]
+  video_ids.each do |id|
+    abort "Missing static video link: #{id}" unless hrefs.include?("https://www.youtube.com/watch?v=#{id}")
+  end
+  abort "Missing static ISO download" unless hrefs.any? { |href| href.match?(%r{\Ahttps://iso\.omarchy\.org/[^/?]+\.iso\z}) }
+  body = html[/<body\b[^>]*>(.*?)<\/body>/im, 1] || ""
+  text = CGI.unescapeHTML(body.gsub(/<(script|style)\b[^>]*>.*?<\/\1>/im, "").gsub(/<[^>]+>/, " ")).gsub(/\s+/, " ")
+  required_text = ["Beautiful defaults.", "Total command.", "Curated with taste", "Built to be changed", "Ready for agents", "See Omarchy in motion.", "Omarchy command center", "omarchy theme list", "omarchy theme set <name>", "omarchy screenshot", "omarchy debug"]
+  abort "Required no-JavaScript homepage content is missing" unless required_text.all? { |phrase| text.include?(phrase) }
+
+  puts run!("node", "tests/home-reduced-motion.mjs").strip
+  puts "PASS: Ruby/JS syntax, whitespace, public-file guard, #{licenses.length} license notices, #{ids.length} unique IDs, #{local_paths.length} local targets, five videos and static content."
+end

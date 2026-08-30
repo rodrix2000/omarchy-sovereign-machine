@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+# Package a public review copy without changing the official site source.
+require "fileutils"
+require "tmpdir"
+require "uri"
+
+root = File.expand_path("..", __dir__)
+cache = File.join(root, ".cloudflare")
+abort "Refusing a symlinked staging directory" if File.symlink?(cache)
+FileUtils.mkdir_p(cache)
+output = Dir.mktmpdir("omarchy-preview-", cache)
+
+# Deliberate allowlist: never publish .git, build tools, notes, submissions,
+# original CNAME, install scripts, templates, or the handoff directory.
+public_paths = %w[
+  index.html 404.html icon.svg assets brand manual news themes workstations
+  air teams meetups patrons sponsorships security discord omakub potato server LICENSES
+]
+public_extensions = %w[
+  .html .css .js .json .svg .png .jpg .jpeg .webp .gif .ico .woff .woff2
+  .ttf .otf .wasm .mp4 .webm .pdf .txt
+]
+
+copied = []
+public_paths.each do |entry|
+  source = File.join(root, entry)
+  abort "Missing expected public path: #{entry}" unless File.exist?(source)
+  paths = File.directory?(source) ? Dir.glob(File.join(source, "**", "*")) : [source]
+  paths.each do |file|
+    abort "Refusing symlink: #{file}" if File.symlink?(file)
+    next if File.directory?(file)
+    next unless public_extensions.include?(File.extname(file).downcase)
+
+    relative = file.delete_prefix("#{root}/")
+    target = File.join(output, relative)
+    FileUtils.mkdir_p(File.dirname(target))
+    if File.extname(file) == ".html"
+      html = File.read(file)
+      # Preview visits must not be attributed to Omarchy's production account.
+      html = html.gsub(/^[ \t]*<script\b[^>]*src=["']https:\/\/plausible\.io\/[^"']+["'][^>]*>\s*<\/script>\s*\n?/i, "")
+      html = html.sub("</head>", "    <meta name=\"robots\" content=\"noindex, nofollow\">\n  </head>")
+      html = html.sub('<meta property="og:url" content="https://omarchy.org/">', '<meta property="og:url" content="https://omarchy.rudyr.com/">') if relative == "index.html"
+      File.write(target, html)
+    else
+      FileUtils.cp(file, target)
+    end
+    copied << relative
+  end
+end
+
+File.write(File.join(output, "_headers"), <<~HEADERS)
+  /*
+    X-Robots-Tag: noindex, nofollow
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: strict-origin-when-cross-origin
+HEADERS
+
+# Resolve every root-relative homepage link/asset before exposing the package.
+html = File.read(File.join(output, "index.html"))
+local_paths = html.scan(/(?:href|src)="(\/[^"#?]*)/).flatten.uniq
+missing = local_paths.reject do |path|
+  file = File.join(output, URI::DEFAULT_PARSER.unescape(path))
+  [file, "#{file}.html", File.join(file, "index.html")].any? { |candidate| File.file?(candidate) }
+end
+abort "Missing homepage targets: #{missing.join(', ')}" unless missing.empty?
+abort "Preview still includes production analytics" if html.include?("plausible.io")
+
+warn "Prepared #{copied.length} public files; #{local_paths.length} homepage targets verified."
+puts output
