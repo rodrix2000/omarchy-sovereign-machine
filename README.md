@@ -10,7 +10,11 @@ This is not the official Omarchy site and is not endorsed by Omacom or 37signals
 [Pages fallback](https://omarchy-sovereign-machine.pages.dev/) ·
 [Case study](docs/CASE-STUDY.md) · [Implementation notes](IMPLEMENTATION-NOTES.md)
 
-![The Sovereign Machine desktop homepage](docs/screenshots/sovereign-machine-homepage-desktop-1440.png)
+![Current Sovereign Machine homepage with the larger Omarchy wordmark and “We can fix everything” terminal message](docs/screenshots/sovereign-machine-homepage-desktop-1440.png)
+
+Captured from the live preview on August 30, 2026, in the Sovereign palette
+after the CRT reveal completes. Desktop: 1440 × 900.
+[View the matching mobile capture (390 × 844)](docs/screenshots/sovereign-machine-homepage-mobile-390.png).
 
 ## The direction
 
