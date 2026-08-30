@@ -32,7 +32,8 @@ this public record intentionally excludes private working notes and handoffs.
   packaging, explicit deployment and repeatable static/reduced-motion checks.
 - README, case study, deployment documentation, license notices and two final
   captures: public review and reuse guidance.
-- GitHub workflow: validation-only checks replace the inherited Pages deploy.
+- GitHub workflow: validate and publish the allowlisted artifact to Cloudflare
+  Pages on design-branch pushes; pull requests remain validation-only.
 
 ## Design decisions
 
@@ -66,8 +67,9 @@ and the home link were checked. Keyboard focus
 on the brand retains its cyan outline. `ruby bin/check` (including static content,
 local targets and reduced motion) and `html-validate@10.4.0 index.html` passed.
 Browser logs showed no errors; only the existing analytics warning that ignores
-localhost. Review captures remain outside the public checkout. Publishing this
-refinement to the live preview remains a separate, explicit deployment step.
+localhost. Review captures remain outside the public checkout. This refinement
+was published with the explicit deployment command before the automatic release
+workflow below was added.
 
 ### Destination links — 2026-08-30
 
@@ -85,6 +87,25 @@ HTML validation and the complete preflight passed. Browser checks confirmed
 all six link configurations, desktop/mobile layout without overflow, and that
 opening the manual creates a separate tab while the homepage stays in place.
 The multi-gigabyte ISO download was not triggered during verification.
+
+### Push-to-deploy automation — 2026-08-30
+
+Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation
+workflow follows the `rudyr_astro` GitHub Actions → Cloudflare Pages pattern.
+Only a push or manual workflow run on the public fork's design branch may
+deploy. A dependent job publishes the same allowlisted artifact that passed
+validation, using pinned Wrangler `4.119.0` and the triggering commit SHA.
+The final step verifies that the custom domain serves the packaged homepage.
+No homepage content, production dependencies, DNS records or other projects
+are changed by this automation setup.
+
+A dedicated Pages-only account token is stored as a GitHub repository secret;
+the account ID is a repository variable. No credentials enter source control or
+the artifact. The existing public-file exclusions, noindex and cache headers,
+analytics removal, manual fallback and Cloudflare rollback remain in place.
+Workflow syntax was checked with `actionlint`; homepage preflight and HTML
+validation passed locally. The release is verified by the push-triggered
+workflow's validation, upload and live-homepage comparison jobs.
 
 ## Verification evidence
 
@@ -119,6 +140,7 @@ mailto link without requiring Cloudflare's decoding script.
 - No handoff files, private notes, draft email or scratch captures are committed.
 - Only Rudy's original contributions are MIT-licensed. The upstream website and
   jester did not declare a general license; no blanket relicensing is asserted.
-- Git pushes validate only; deployment is an explicit local release command.
+- Design-branch pushes validate and automatically deploy through GitHub Actions;
+  pull requests validate only. Manual deployment remains a fallback.
 
 See `LICENSE.md`, `THIRD-PARTY-NOTICES.md` and `DEPLOYMENT.md` for exact scope.

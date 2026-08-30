@@ -7,7 +7,54 @@ Fallback: <https://omarchy-sovereign-machine.pages.dev/>
 This independent preview uses Cloudflare Pages Direct Upload. It is not deployed
 to Omarchy's production infrastructure and does not use GitHub Pages.
 
-## Publish
+## Publish automatically
+
+Commit and push reviewed changes from this public checkout to
+`design/sovereign-machine-homepage`:
+
+```sh
+ruby bin/check
+npx --yes html-validate@10.4.0 index.html
+git push origin design/sovereign-machine-homepage
+```
+
+The [Validate and deploy homepage workflow](https://github.com/rodrix2000/omarchy-sovereign-machine/actions/workflows/check.yml)
+runs the source, link, license, privacy, reduced-motion and HTML checks, then
+packages the allowlisted public site. A dependent deployment job downloads that
+exact artifact and uploads it to `omarchy-sovereign-machine`, labeling the
+deployment with the triggering Git commit SHA. It then compares the custom
+domain's homepage byte-for-byte with the packaged homepage. Check both jobs are
+green before considering a release verified.
+
+Pull requests run validation only. Deployment is restricted to pushes or manual
+workflow runs on the design branch in `rodrix2000/omarchy-sovereign-machine`.
+New runs supersede older runs on the same ref. The workflow uses read-only
+repository permissions and the `production` environment, which also restricts
+deployments to that branch. It does not require a local Cloudflare login or a
+running development server.
+
+## Deployment credentials
+
+GitHub Actions uses these repository settings, never committed files:
+
+- Secret `CLOUDFLARE_API_TOKEN`: dedicated
+  `omarchy-sovereign-machine-github-actions` account token with **Pages Edit**
+  permission only. This permission applies to Pages in the selected Cloudflare
+  account, not just one Pages project; the workflow fixes the destination project.
+- Variable `CLOUDFLARE_ACCOUNT_ID`: the Cloudflare account containing this Pages
+  project. An account ID is not a secret.
+
+The token is separate from `rudyr_astro`'s credential and has no DNS, Workers,
+billing or token-management permissions. It has no automatic expiration; rotate
+or revoke it when access changes. To rotate it, create a replacement
+with the same scope, replace the GitHub secret, verify a deployment, then revoke
+the old token in Cloudflare. Do not paste tokens into workflow YAML, issues or
+deployment logs.
+
+Fork users must configure their own credentials and change the workflow's
+repository guard, project, branch and live URL before enabling deployment.
+
+## Manual fallback
 
 From this repository on `design/sovereign-machine-homepage`:
 
@@ -27,13 +74,15 @@ The script includes the current working tree, including uncommitted source
 changes. Commit reviewed changes before a release for a reproducible record.
 The deployment is labeled dirty when working changes are present.
 
-## GitHub and Cloudflare are linked by the release workflow
+## GitHub and Cloudflare connection
 
 The public Git remote is
 `https://github.com/rodrix2000/omarchy-sovereign-machine.git`. The checked-out
-source is what `bin/deploy-preview` packages for the existing Pages project.
-GitHub Actions performs validation only. **Pushing a commit does not deploy it.**
-No GitHub Cloudflare secret or persistent deployment token has been created.
+source is packaged for the existing Pages project by GitHub Actions, using the
+same `bin/prepare-preview` allowlist as the manual fallback. This matches the
+`rudyr_astro` deployment pattern. Cloudflare's native Git integration is not
+connected; the project remains Direct Upload. No new Pages project or DNS
+change is needed for automatic deployment.
 
 ## Public package boundary
 
@@ -83,5 +132,6 @@ as `/.git/config` must return 404.
 Use this project's Cloudflare **Deployments** list to roll back to a previously
 verified production deployment. Never select an unrelated Pages project.
 
-References: [Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/)
+References: [Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/),
+[Direct Upload with CI](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/)
 and [custom domains](https://developers.cloudflare.com/pages/configuration/custom-domains/).

@@ -1,4 +1,4 @@
-name: Validate static homepage
+name: Validate and deploy homepage
 
 on:
   push:
@@ -9,11 +9,19 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
+    name: Validate public homepage
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -22,4 +30,75 @@ jobs:
       - name: Validate homepage HTML
         run: npx --yes html-validate@10.4.0 index.html
       - name: Validate public deployment package
-        run: ruby bin/prepare-preview
+        id: package
+        run: |
+          directory=$(ruby bin/prepare-preview)
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
+      - name: Save the validated public package
+        uses: actions/upload-artifact@v4
+        with:
+          name: omarchy-preview
+          path: ${{ steps.package.outputs.directory }}/
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy-pages:
+    name: Deploy Cloudflare Pages
+    needs: check
+    if: >-
+      github.repository == 'rodrix2000/omarchy-sovereign-machine' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      github.ref == 'refs/heads/design/sovereign-machine-homepage'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: https://omarchy.rudyr.com
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download the validated public package
+        uses: actions/download-artifact@v4
+        with:
+          name: omarchy-preview
+          path: public-preview
+      - name: Verify Cloudflare deployment credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::Missing CLOUDFLARE_API_TOKEN repository secret."
+            exit 1
+          fi
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error::Missing CLOUDFLARE_ACCOUNT_ID repository variable."
+            exit 1
+          fi
+      - name: Deploy the validated commit to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4.119.0 pages deploy public-preview \
+            --project-name omarchy-sovereign-machine \
+            --branch design/sovereign-machine-homepage \
+            --commit-hash "$GITHUB_SHA" \
+            --commit-dirty=false
+      - name: Verify the custom domain serves this release
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error --max-time 15 \
+              --header 'Cache-Control: no-cache' \
+              "https://omarchy.rudyr.com/?release=$GITHUB_SHA" \
+              --output "$RUNNER_TEMP/omarchy-live.html" && \
+              cmp --silent public-preview/index.html "$RUNNER_TEMP/omarchy-live.html"; then
+              echo "Verified omarchy.rudyr.com matches $GITHUB_SHA."
+              exit 0
+            fi
+            echo "Waiting for the custom domain to serve this release (attempt $attempt/12)."
+            sleep 5
+          done
+          echo "::error::Live homepage does not match the validated deployment package."
+          exit 1

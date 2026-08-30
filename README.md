@@ -54,13 +54,17 @@ See [the original upstream README](docs/UPSTREAM-README.md) for theme submission
 ```sh
 ruby bin/check
 npx --yes html-validate@10.4.0 index.html
-ruby bin/deploy-preview
+git push origin design/sovereign-machine-homepage
 ```
 
-Deployment requires your own authorized Cloudflare login. It publishes an
-allowlisted package to the separate `omarchy-sovereign-machine` Pages project;
-it never uploads the repository root. Git pushes run checks only, not automatic
-deployments. See [DEPLOYMENT.md](DEPLOYMENT.md).
+After committing reviewed changes, pushing the design branch automatically
+validates and deploys to Cloudflare Pages through GitHub Actions. Pull requests
+validate only. The workflow publishes the exact checked, allowlisted package to
+the separate `omarchy-sovereign-machine` Pages project, never the repository
+root, and verifies the live homepage matches. Credentials stay in GitHub's
+encrypted secrets. The manual fallback is `ruby bin/deploy-preview` with an
+authorized Cloudflare login. See [DEPLOYMENT.md](DEPLOYMENT.md) for release
+status, credential setup, fork configuration and rollback.
 
 ## License and attribution
 
