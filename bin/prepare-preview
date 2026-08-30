@@ -3,6 +3,7 @@
 require "fileutils"
 require "tmpdir"
 require "uri"
+require "digest"
 
 root = File.expand_path("..", __dir__)
 cache = File.join(root, ".cloudflare")
@@ -40,6 +41,15 @@ public_paths.each do |entry|
       html = html.gsub(/^[ \t]*<script\b[^>]*src=["']https:\/\/plausible\.io\/[^"']+["'][^>]*>\s*<\/script>\s*\n?/i, "")
       html = html.sub("</head>", "    <meta name=\"robots\" content=\"noindex, nofollow\">\n  </head>")
       html = html.sub('<meta property="og:url" content="https://omarchy.org/">', '<meta property="og:url" content="https://omarchy.rudyr.com/">') if relative == "index.html"
+      # Fingerprint entry URLs so existing preview visitors cannot mix an old
+      # cached stylesheet/script with new HTML. Source filenames stay unchanged.
+      html = html.gsub(/((?:href|src)=["'])(\/assets\/[^"'?#]+\.(?:css|js))(["'])/) do
+        opening, path, closing = Regexp.last_match.captures
+        asset = File.join(root, path)
+        abort "Missing linked entry asset: #{path}" unless File.file?(asset)
+        version = Digest::SHA256.file(asset).hexdigest[0, 12]
+        "#{opening}#{path}?v=#{version}#{closing}"
+      end
       File.write(target, html)
     else
       FileUtils.cp(file, target)
@@ -50,6 +60,7 @@ end
 
 File.write(File.join(output, "_headers"), <<~HEADERS)
   /*
+    Cache-Control: no-cache
     X-Robots-Tag: noindex, nofollow
     X-Content-Type-Options: nosniff
     Referrer-Policy: strict-origin-when-cross-origin

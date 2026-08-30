@@ -64,6 +64,11 @@ SHA-256 comparisons for all 33 referenced assets/imports/fonts. All five video
 links remained present. Missing/private paths returned 404. The public package
 removes production analytics and includes noindex headers.
 
+The public release's browser check exposed a stale stylesheet in an existing
+Chrome session. Preview packaging now fingerprints CSS/JavaScript entry URLs
+and requests cache revalidation. The source tree keeps its original filenames
+and static architecture; no bundler or runtime cache workaround was added.
+
 ## Intentional deviations and limits
 
 - The public preview uses Cloudflare Pages instead of upstream GitHub Pages.
