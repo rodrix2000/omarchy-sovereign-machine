@@ -46,7 +46,9 @@ submission drafts, internal notes, install endpoints, templates and the upstream
 Preview-only transformations remove Omarchy's production Plausible script,
 add noindex meta/response headers, and set the homepage Open Graph URL to the
 preview domain. CSS/JavaScript entry URLs gain content-hash query versions;
-`Cache-Control: no-cache` requests revalidation of the remaining preview assets.
+`Cache-Control: no-cache, no-transform` requests revalidation of the remaining
+preview assets and prevents Cloudflare's email-obfuscation rewrite from making
+the existing public contact link depend on JavaScript.
 This prevents old cached styles from being paired with new release markup.
 Source HTML retains upstream analytics/canonical metadata for
 review; do not upload the entire source tree to a different host.

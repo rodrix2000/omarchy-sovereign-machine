@@ -68,6 +68,9 @@ The public release's browser check exposed a stale stylesheet in an existing
 Chrome session. Preview packaging now fingerprints CSS/JavaScript entry URLs
 and requests cache revalidation. The source tree keeps its original filenames
 and static architecture; no bundler or runtime cache workaround was added.
+The raw-HTML audit also caught Cloudflare's automatic email obfuscation. A
+preview-only `no-transform` response directive preserves the original public
+mailto link without requiring Cloudflare's decoding script.
 
 ## Intentional deviations and limits
 

@@ -60,7 +60,7 @@ end
 
 File.write(File.join(output, "_headers"), <<~HEADERS)
   /*
-    Cache-Control: no-cache
+    Cache-Control: no-cache, no-transform
     X-Robots-Tag: noindex, nofollow
     X-Content-Type-Options: nosniff
     Referrer-Policy: strict-origin-when-cross-origin
