@@ -88,6 +88,21 @@ all six link configurations, desktop/mobile layout without overflow, and that
 opening the manual creates a separate tab while the homepage stays in place.
 The multi-gigabyte ISO download was not triggered during verification.
 
+### Manual navigation link — 2026-08-30
+
+Starting from `adc977aa67674e77b3bac6e1fb1e3040bce5a353`, both the desktop navbar
+and mobile-menu Manual links use native `target="_blank"` behavior with
+`rel="noopener noreferrer"` and an accessible new-tab announcement. Their
+destination and visible text are unchanged. Footer links and other navigation
+items are unchanged; no JavaScript, layout or dependencies were added.
+`bin/check` now guards both Manual navigation links against target, security
+attribute and accessibility regressions.
+
+Local browser clicks at 1440px and 390px opened the manual in separate tabs
+while preserving the homepage. The mobile menu still closed after activation,
+with no horizontal overflow. Source/reduced-motion checks and HTML validation
+passed; the only console warning was the existing analytics localhost notice.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation
