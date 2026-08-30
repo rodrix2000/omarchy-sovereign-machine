@@ -2,6 +2,7 @@ import * as workstations from './modules/workstations.js';
 import * as logo from './modules/logo.js';
 import * as video from './modules/video.js';
 import * as home from './modules/home.js';
+import * as wordmark from './modules/wordmark.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -9,5 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   logo.ready();
   video.ready();
   home.ready();
+  wordmark.ready();
 
 });

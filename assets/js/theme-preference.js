@@ -21,7 +21,7 @@
     motion.addEventListener('change', finish, { once: true });
     // Schedule the fail-open cleanup before opting in. CSS completes even if
     // the main module fails; slow styles/images simply get the static mark.
-    window.setTimeout(finish, 1800);
+    window.setTimeout(finish, 2200);
     document.documentElement.dataset.wordmarkIntro = 'true';
   } catch {
     // Unsupported motion APIs leave the native, accessible image untouched.

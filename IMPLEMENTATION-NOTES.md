@@ -384,6 +384,82 @@ unit tests, not a new physical-device preference capture. Normal-page console
 checks showed only the existing localhost analytics notice. Review captures
 stay outside the public checkout.
 
+### R-centered CRT refinement — 2026-08-30
+
+Baseline: `a1c8c5a0e9f8184862b7319252b045ab0d14a81a`.
+This replaces the left-to-right entrance above with a center-out CRT startup.
+The reveal begins at the actual R bounds (x=1938..2448 in the 4131-unit SVG),
+holds that central letter briefly, then expands both edges together. The
+supporting tagline, header and footer do not animate or change.
+
+A small `wordmark.js` module paints the existing SVG into an aria-hidden,
+noninteractive canvas at four finite resolutions: 48, 64, 108 and 216 pixels
+wide. Nearest-neighbor display creates actual coarse pixels instead of relying
+only on blur. The layer crossfades into the untouched, accessible SVG as the
+resolution increases. A soft phosphor glow and faint scanlines settle without
+flashing. CSS expansion completes at 1600ms and warm-up at 1850ms; the canvas
+is removed on completion, with a 2000ms cleanup fallback and 2200ms early
+opt-in expiry. No continuous rendering loop, new artwork or dependency is
+added. The original fixed image dimensions remain the layout anchor.
+
+Reduced motion and deep links still bypass the effect. Motion changes, missing
+canvas support, drawing errors, failed/late images and expired opt-in all clean
+up safely. If the main module fails, CSS can still reveal the native image;
+without JavaScript the complete wordmark is immediately visible.
+
+Files changed: `assets/css/home.css`, `assets/js/theme-preference.js`,
+`assets/js/script.js`, new `assets/js/modules/wordmark.js`,
+`tests/home-wordmark.mjs`, `bin/check`, and this document. Regression coverage
+now checks both expanding clip edges, four real drawing resolutions, semantic
+SVG retention, canvas/timer/listener cleanup and error/motion/image fallbacks.
+
+In-app browser captures verified the R-first state, simultaneous outward reveal
+and progressive pixel refinement at 1440px and 390px. After completion the
+canvas was gone and clipping/filter/opacity returned to the static originals.
+Widths 320, 390, 768, 1024 and 1440px showed no horizontal overflow. A temporary
+`script-src 'none'` server verified the full static wordmark and page content.
+Direct `#themes` navigation and Black Gold/Sovereign changes did not replay
+the effect. Normal-page logs showed only the existing localhost analytics
+notice. Source/HTML/whitespace checks and the 518-file preview package passed.
+Reduced-motion coverage remains source/unit testing rather than a new OS-level
+preference capture. No physical-device or screen-reader audit was added.
+
+### Larger hero wordmark — 2026-08-30
+
+Increased only the hero wordmark's responsive frame: the desktop cap is now
+38rem (608px), up from 32rem (512px), and the small-screen cap is 28.5rem
+instead of 24rem. A 90vw mobile limit preserves equal 5vw side margins;
+the 390px view grows gently from about 343px to 351px. The original aspect
+ratio, green artwork, centered tagline, R-first CRT timing and static/motion
+fallbacks remain unchanged. Header and footer branding are unaffected.
+
+In-app browser checks at 320, 390, 640, 768 and 1440px confirmed centering
+without horizontal overflow. Desktop/mobile captures and a reload verified
+the larger logo, R-first reveal and clean final image with its canvas removed.
+Black Gold/Sovereign selection still works without restarting the reveal.
+`ruby bin/check` and HTML validation passed; browser logs contained only the
+existing localhost analytics warning. No new OS-level reduced-motion or
+physical-device check was performed for this CSS-only sizing adjustment.
+
+### Hero terminal message — 2026-08-30
+
+Added the approved line, "We can fix everything", immediately above the
+primary headline in its own headline group. It uses the existing interface
+font at 13–14px, a cyan prompt and warm-gold text, with 16px of space before
+the h1. There is no box, border, quotation mark, attribution or animation.
+The decorative prompt is hidden from assistive technology; the message is
+ordinary HTML text and is included in the no-JavaScript content preflight.
+The existing theme tokens let the message follow the selected page palette.
+
+Files changed for this slice: `index.html`, `assets/css/home.css`, `bin/check`
+and this document. Browser checks at 320, 390, 768 and 1440px verified a
+single-line message aligned with the headline, no horizontal overflow and
+no animation. Desktop/mobile screenshots confirmed the visual hierarchy.
+Black Gold/Sovereign selection updated the palette without changing the text.
+`ruby bin/check`, HTML validation and whitespace checks passed. Browser logs
+contained only the existing localhost analytics warning. No new physical
+device, screen-reader or browser-level reduced-motion audit was performed.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation

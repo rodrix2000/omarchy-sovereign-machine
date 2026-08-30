@@ -26,7 +26,7 @@ Dir.chdir(root) do
   %w[bin/serve bin/prepare-preview bin/deploy-preview bin/check].each do |path|
     run!(RbConfig.ruby, "-c", path)
   end
-  %w[assets/js/script.js assets/js/theme-preference.js assets/js/modules/home.js assets/js/modules/video.js].each do |path|
+  %w[assets/js/script.js assets/js/theme-preference.js assets/js/modules/home.js assets/js/modules/video.js assets/js/modules/wordmark.js].each do |path|
     run!("node", "--input-type=module", "--check", stdin_data: File.read(path))
   end
   run!("git", "diff", "--check")
@@ -137,7 +137,7 @@ Dir.chdir(root) do
 
   body = html[/<body\b[^>]*>(.*?)<\/body>/im, 1] || ""
   text = CGI.unescapeHTML(body.gsub(/<(script|style)\b[^>]*>.*?<\/\1>/im, "").gsub(/<[^>]+>/, " ")).gsub(/\s+/, " ")
-  required_text = ["Beautiful defaults.", "Total command.", "Curated with taste", "Built to be changed", "Ready for agents", "See Omarchy in motion.", "Omarchy command center", "omarchy theme list", "omarchy theme set <name>", "omarchy screenshot", "omarchy debug"]
+  required_text = ["We can fix everything", "Beautiful defaults.", "Total command.", "Curated with taste", "Built to be changed", "Ready for agents", "See Omarchy in motion.", "Omarchy command center", "omarchy theme list", "omarchy theme set <name>", "omarchy screenshot", "omarchy debug"]
   abort "Required no-JavaScript homepage content is missing" unless required_text.all? { |phrase| text.include?(phrase) }
 
   puts run!("node", "tests/home-themes.mjs").strip
