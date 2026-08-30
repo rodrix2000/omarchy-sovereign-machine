@@ -107,6 +107,13 @@ Workflow syntax was checked with `actionlint`; homepage preflight and HTML
 validation passed locally. The release is verified by the push-triggered
 workflow's validation, upload and live-homepage comparison jobs.
 
+The first real push-triggered release, commit `582b39a`, passed both jobs in
+[run 33325176659](https://github.com/rodrix2000/omarchy-sovereign-machine/actions/runs/33325176659)
+without a manual deployment. Its runner deprecation notices prompted an update
+to current Node-24-based action releases, pinned to their immutable commit SHAs.
+The download action also fails on artifact digest mismatches. Node 22 remains
+the command-line tooling runtime; there are still no production dependencies.
+
 ## Verification evidence
 
 The reviewed design was visually checked at 1440px and 390px, with overflow
