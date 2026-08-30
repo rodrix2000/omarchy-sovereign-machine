@@ -43,7 +43,9 @@ development tool, not a production server.
 - All content and links remain available without JavaScript.
 - Reduced-motion support, keyboard navigation and visible focus states.
 - Responsive layouts verified at 1440px and 390px, with intermediate checks.
-- Video posters load a player only after activation; other videos remain links.
+- All five video posters open YouTube in a new tab; no player loads on the homepage.
+- Homepage destination links open new tabs; ISO downloads, home/section navigation
+  and email links retain their native behavior.
 
 The main changes are in `index.html`, `assets/css/home.css`, and
 `assets/js/modules/home.js`. Existing public routes and upstream history remain.

@@ -59,6 +59,32 @@ Dir.chdir(root) do
 
   hrefs = tags.filter_map { |name, attributes| attributes["href"] if name == "a" }
   abort "Homepage has an empty or JavaScript-only link" if hrefs.any? { |href| href.empty? || href.match?(/\Ajavascript:/i) }
+
+  # A single homepage-wide policy prevents isolated CTA/footer regressions.
+  link_counts = Hash.new(0)
+  tags.select { |name, _attributes| name == "a" }.each do |_name, link|
+    href = link.fetch("href", "")
+    kind = if href.match?(%r{\Ahttps://iso\.omarchy\.org/[^?#]+\.iso(?:[?#].*)?\z})
+      :iso
+    elsif href == "/" || href.start_with?("#")
+      :same_page
+    elsif href.start_with?("mailto:")
+      :email
+    else
+      :destination
+    end
+    link_counts[kind] += 1
+
+    if kind == :destination
+      abort "Destination must open a safe new tab: #{href}" unless link["target"] == "_blank" && (%w[noopener noreferrer] - link.fetch("rel", "").split).empty?
+      abort "Missing new-tab accessibility hint: #{href}" unless link.fetch("aria-label", "").include?("opens in a new tab")
+      abort "A new-tab destination must not activate an inline video: #{href}" if link.key?("data-video")
+    else
+      abort "Keep #{kind} link behavior unchanged: #{href}" if link.key?("target")
+    end
+  end
+  puts "PASS: all #{link_counts[:destination]} homepage destinations open safe, labeled new tabs; #{link_counts[:iso]} ISO downloads, #{link_counts[:same_page]} home/section links and #{link_counts[:email]} email link retain native behavior."
+
   resources = tags.flat_map { |_name, attributes| attributes.values_at("href", "src") }.compact
   local_paths = resources.select { |value| value.start_with?("/") && !value.start_with?("//") }.map { |value| value.split(/[?#]/, 2).first }.uniq
   local_paths.each do |path|

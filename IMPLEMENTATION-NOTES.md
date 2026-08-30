@@ -103,6 +103,32 @@ while preserving the homepage. The mobile menu still closed after activation,
 with no horizontal overflow. Source/reduced-motion checks and HTML validation
 passed; the only console warning was the existing analytics localhost notice.
 
+### Homepage-wide destination links — 2026-08-30
+
+Starting from `fa0b2f09142996aff27ba2eb1eee6054c815d202`, all 43 homepage links
+to other pages now open new tabs, including Explore themes, the announcement,
+system/CLI links, mobile navigation, community, footer credits and all five
+video posters. Each uses `target="_blank"`, `rel="noopener noreferrer"` and an
+accessible new-tab announcement. Existing CTA arrows point diagonally where
+appropriate. All 57 original anchor destinations are unchanged.
+
+The three ISO anchors remain byte-for-byte unchanged. The ten home/section
+navigation links stay in the current tab, and the email link retains native
+mail-handler behavior. This policy is scoped to the redesigned homepage, not
+the inherited manual or other secondary pages. The introduction poster no
+longer opts into the inline player, so its click opens YouTube consistently
+with the other four videos. No JavaScript or CSS changes were required.
+
+`bin/check` now audits the complete homepage link policy, including the native
+exceptions and prevention of inline-video interception. Source, HTML and
+reduced-motion checks passed. A browser DOM audit found no policy violations.
+Explore themes opened separate tabs at 1440px and 390px; desktop section
+navigation stayed in place, the introduction video opened YouTube without an
+inline iframe, and mobile Security opened separately while closing the menu.
+The homepage remained open throughout, with no horizontal overflow. The only
+console warning was the existing analytics localhost notice. ISO downloads
+and the email application were deliberately not activated during testing.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation
