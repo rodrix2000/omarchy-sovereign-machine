@@ -18,7 +18,12 @@ const dropdown = html.match(/<select\b[^>]*data-site-theme-select[^>]*>([\s\S]*?
 assert.deepEqual([...dropdown.matchAll(/<option value="([^"]+)"/g)].map((match) => match[1]), ['sovereign', ...expected]);
 assert.match(dropdown, /<option value="sovereign" selected>/);
 assert.match(html, /<label class="site-theme" hidden>/, 'Do not expose a nonfunctional dropdown without JavaScript');
+assert.match(html, /<select[^>]*aria-label="Site color theme"[^>]*title="Theme: Sovereign \(original\)"/);
+assert.match(html, /<svg class="site-theme__icon"[^>]*aria-hidden="true"/);
+assert.match(palettes, /\.site-theme:has\(select:focus-visible\)/, 'The icon wrapper must expose native select focus');
 assert.match(html, /data-theme-status aria-live="polite"/);
+assert.match(html, /class="sm-button site-nav__cta"/, 'Only the navbar CTA uses the compact outline treatment');
+assert.match(html, /class="sm-button sm-button--primary" href="https:\/\/iso\.omarchy\.org\//, 'The hero keeps its larger filled download button');
 
 class Element {
   dataset = {};
@@ -81,6 +86,7 @@ const { image, status, preview, body, select, inputs, storage, events, context }
 assert.deepEqual(Object.keys(context.themes), expected, 'Markup and module choices must stay synchronized');
 assert.equal(body.dataset.siteTheme, 'sovereign');
 assert.equal(select.value, 'sovereign');
+assert.equal(select.title, 'Theme: Sovereign (original)');
 assert.equal(select.label.hidden, false);
 assert.equal(inputs.some((input) => input.checked), false);
 assert.equal(storage.size, 0, 'Do not write a preference before a user chooses one');
@@ -100,6 +106,7 @@ for (const input of inputs) {
   assert.equal(preview.dataset.themePreview, input.value);
   assert.equal(body.dataset.siteTheme, input.value);
   assert.equal(select.value, input.value);
+  assert.equal(select.title, `Theme: ${theme.name}`);
   assert.equal(storage.get('omarchy-sovereign-theme'), input.value);
   assert.equal(image.src, theme.image);
   assert.equal(image.alt, theme.alt);
@@ -122,6 +129,7 @@ for (const value of expected) {
 
 select.value = 'sovereign';
 select.change();
+assert.equal(select.title, 'Theme: Sovereign (original)');
 assert.equal(body.dataset.siteTheme, 'sovereign');
 assert.equal(inputs.some((input) => input.checked), false);
 assert.equal(preview.dataset.themePreview, 'tokyo-night');

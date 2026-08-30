@@ -212,6 +212,31 @@ Screenshots were visually reviewed; no-JavaScript fallback and reduced motion
 were checked by the source/regression suite. The prior keyboard-test-tool
 limitation remains; controls retain native select/radio semantics.
 
+### Compact navbar actions — 2026-08-30
+
+Starting from `308f5b00ffd2311ff6f1b47ab5b48f62cda74472`, the navbar's 160px-wide
+theme field becomes a small, code-native color-swatch icon in a 44px-square
+target. The actual native select still occupies the control, retains its
+accessible name and seven options, and receives pointer/keyboard focus. Its
+wrapper displays a visible focus ring. The native tooltip identifies the
+current theme and updates from either selector, restoration or cross-tab sync.
+
+The navbar ISO link is now a quiet, theme-colored outline button, approximately
+129 × 36px on desktop instead of 158 × 45px. On phones it retains a 44px height
+and now displays the full "Get Omarchy" label. Hero and other page download
+buttons, destinations, theme palettes and saved-preference behavior are unchanged.
+Files changed: `index.html`, `assets/css/home.css`, `assets/css/home-themes.css`,
+`assets/js/modules/home.js`, `tests/home-themes.mjs` and this document.
+
+Browser checks confirmed the icon's hit target is the native select, its focus
+ring is visible, changing the theme works, the tooltip follows both dropdown
+and swatch selection, and the mobile menu still opens/navigates/closes. Header
+layout checks at 320, 390, 768, 1024 and 1440px found no overlap or horizontal
+overflow. Desktop/mobile screenshots were reviewed against the oversized-field
+feedback. Only the existing localhost analytics warning appeared. Preflight,
+HTML validation, contrast/reduced-motion regressions, link policy and public
+packaging passed; no dependencies or separate image assets were added.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation

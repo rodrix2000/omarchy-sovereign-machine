@@ -115,7 +115,10 @@ function setupThemePreview() {
     image.src = theme.image;
     image.alt = theme.alt;
     controls.forEach((input) => { input.checked = input.value === selected; });
-    if (select instanceof HTMLSelectElement) select.value = selected;
+    if (select instanceof HTMLSelectElement) {
+      select.value = selected;
+      select.title = `Theme: ${selected === 'sovereign' ? 'Sovereign (original)' : theme.name}`;
+    }
     if (status != null) {
       status.textContent = selected === 'sovereign'
         ? 'Original site palette · Tokyo Night desktop preview.'

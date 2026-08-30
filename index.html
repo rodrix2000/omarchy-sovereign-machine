@@ -63,7 +63,13 @@
 
         <label class="site-theme" hidden>
           <span class="site-theme__label">Theme</span>
-          <select name="site-theme" aria-label="Site color theme" data-site-theme-select>
+          <svg class="site-theme__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect class="site-theme__swatch--cyan" x="3" y="3" width="7" height="7" rx="1"/>
+            <rect class="site-theme__swatch--gold" x="14" y="3" width="7" height="7" rx="1"/>
+            <rect class="site-theme__swatch--magenta" x="3" y="14" width="7" height="7" rx="1"/>
+            <rect class="site-theme__swatch--outline" x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <select name="site-theme" aria-label="Site color theme" title="Theme: Sovereign (original)" data-site-theme-select>
             <option value="sovereign" selected>Sovereign</option>
             <option value="tokyo-night">Tokyo Night</option>
             <option value="catppuccin">Catppuccin</option>
@@ -74,9 +80,8 @@
           </select>
         </label>
 
-        <a class="sm-button sm-button--primary site-nav__cta" href="https://iso.omarchy.org/omarchy-4.0.1.iso" aria-label="Download the current Omarchy ISO">
+        <a class="sm-button site-nav__cta" href="https://iso.omarchy.org/omarchy-4.0.1.iso" aria-label="Download the current Omarchy ISO">
           <span class="site-nav__cta-long">Get Omarchy</span>
-          <span class="site-nav__cta-short" aria-hidden="true">Get</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
         </a>
 

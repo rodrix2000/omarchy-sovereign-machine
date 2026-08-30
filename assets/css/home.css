@@ -233,8 +233,7 @@ html:has(.home) {
   transform: scaleX(1);
 }
 
-.site-menu,
-.site-nav__cta-short {
+.site-menu {
   display: none;
 }
 
@@ -279,9 +278,27 @@ html:has(.home) {
   color: var(--sm-cyan-soft) !important;
 }
 
-.site-nav__cta {
-  min-height: 2.8rem;
-  padding: 0.75rem 1rem;
+.home .site-nav__cta {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--sm-gold) 55%, var(--sm-void));
+  color: var(--sm-gold);
+  font-size: 0.65rem;
+  gap: 0.55rem;
+  letter-spacing: 0.08em;
+  min-height: 2.25rem;
+  padding: 0.55rem 0.85rem;
+}
+
+.home .site-nav__cta:hover,
+.home .site-nav__cta:focus-visible {
+  background: color-mix(in srgb, var(--sm-gold) 9%, var(--sm-void));
+  border-color: var(--sm-gold);
+  color: var(--sm-gold-soft);
+}
+
+.site-nav__cta svg {
+  height: 0.85rem;
+  width: 0.85rem;
 }
 
 .hero {
@@ -1546,18 +1563,16 @@ html:has(.home) {
     width: 1.75rem;
   }
 
-  .site-nav__cta {
-    min-height: 2.6rem;
-    padding: 0.65rem 0.9rem;
+  .home .site-nav__cta {
+    font-size: 0.6rem;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.65rem;
   }
 
-  .site-nav__cta svg,
-  .site-nav__cta-long {
-    display: none;
-  }
-
-  .site-nav__cta-short {
-    display: inline;
+  .site-nav__cta svg {
+    height: 0.75rem;
+    width: 0.75rem;
   }
 
   .site-menu > nav {
