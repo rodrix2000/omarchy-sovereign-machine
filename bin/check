@@ -73,6 +73,25 @@ Dir.chdir(root) do
     abort "Missing static video link: #{id}" unless hrefs.include?("https://www.youtube.com/watch?v=#{id}")
   end
   abort "Missing static ISO download" unless hrefs.any? { |href| href.match?(%r{\Ahttps://iso\.omarchy\.org/[^/?]+\.iso\z}) }
+
+  # Keep the download in place; only the other destination-row links open tabs.
+  explore = html[/<section\b[^>]*\bid="explore"[^>]*>(.*?)<\/section>/m, 1] || ""
+  destination_links = explore.scan(/<a\b([^>]*)>/i).map do |content|
+    content.first.scan(/\s([a-z][\w:-]*)\s*=\s*(["'])(.*?)\2/im).to_h do |key, _quote, value|
+      [key.downcase, CGI.unescapeHTML(value)]
+    end
+  end
+  abort "Expected six Choose your way in links" unless destination_links.length == 6
+  iso_link, *new_tab_links = destination_links
+  abort "Keep the destination ISO link as a direct download" unless iso_link.fetch("href", "").match?(%r{\Ahttps://iso\.omarchy\.org/[^/?]+\.iso\z}) && !iso_link.key?("target")
+  expected_destinations = %w[/manual/ /themes/ https://omarchyplugins.com/ https://github.com/omacom/omarchy /security/]
+  abort "Unexpected destination-row links" unless new_tab_links.map { |link| link["href"] } == expected_destinations
+  new_tab_links.each do |link|
+    abort "Destination must open a safe new tab: #{link["href"]}" unless link["target"] == "_blank" && (%w[noopener noreferrer] - link.fetch("rel", "").split).empty?
+    abort "Missing new-tab accessibility hint: #{link["href"]}" unless link.fetch("aria-label", "").include?("opens in a new tab")
+  end
+  puts "PASS: five destination links open safe, labeled new tabs; the ISO link stays unchanged."
+
   body = html[/<body\b[^>]*>(.*?)<\/body>/im, 1] || ""
   text = CGI.unescapeHTML(body.gsub(/<(script|style)\b[^>]*>.*?<\/\1>/im, "").gsub(/<[^>]+>/, " ")).gsub(/\s+/, " ")
   required_text = ["Beautiful defaults.", "Total command.", "Curated with taste", "Built to be changed", "Ready for agents", "See Omarchy in motion.", "Omarchy command center", "omarchy theme list", "omarchy theme set <name>", "omarchy screenshot", "omarchy debug"]

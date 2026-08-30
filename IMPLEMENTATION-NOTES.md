@@ -69,6 +69,23 @@ Browser logs showed no errors; only the existing analytics warning that ignores
 localhost. Review captures remain outside the public checkout. Publishing this
 refinement to the live preview remains a separate, explicit deployment step.
 
+### Destination links — 2026-08-30
+
+Starting from `273eb56cd28261c6cd4788d41a8df4abb5e1ff36`, items 2–5 in
+"Choose your way in" open their five links in new tabs: Manual, Themes, Plugins,
+GitHub and Security. Both links in item 3 are included. Item 1 keeps its existing
+direct ISO link without a new-tab target. Links elsewhere on the page are not
+changed. The new-tab links use native `target="_blank"` behavior with
+`rel="noopener noreferrer"`, an accessible new-tab announcement and a visible
+diagonal arrow. No JavaScript or dependency changes were needed.
+
+`bin/check` now guards the six destination URLs, the unchanged ISO target, and
+the five new-tab targets, security attributes and accessibility hints. Local
+HTML validation and the complete preflight passed. Browser checks confirmed
+all six link configurations, desktop/mobile layout without overflow, and that
+opening the manual creates a separate tab while the homepage stays in place.
+The multi-gigabyte ISO download was not triggered during verification.
+
 ## Verification evidence
 
 The reviewed design was visually checked at 1440px and 390px, with overflow
