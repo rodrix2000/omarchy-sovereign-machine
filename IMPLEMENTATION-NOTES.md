@@ -237,6 +237,55 @@ feedback. Only the existing localhost analytics warning appeared. Preflight,
 HTML validation, contrast/reduced-motion regressions, link policy and public
 packaging passed; no dependencies or separate image assets were added.
 
+### Homepage video cinema — 2026-08-30
+
+Baseline: `5d7b7c898e66cd0d33874ee3fbaaaf9a376b4bc4`.
+The five existing posters now progressively enhance into a centered, native
+dialog with a dimmed backdrop, theme-colored border, video title, 44px close
+control and a direct "Watch on YouTube" link. The homepage layout and scroll
+position remain intact. The iframe is created only after explicit activation
+and removed on close, stopping playback; focus returns to the invoking poster.
+Space activation and deliberate backdrop dismissal supplement native dialog
+behavior. Modified clicks and the existing YouTube URLs are preserved.
+
+This is an intentional, tightly scoped exception to the previous all-new-tab
+video policy. No-JavaScript and unsupported-dialog visitors still receive the
+original five safe new-tab links. All other destination, ISO, same-page and
+email behavior is unchanged. The source audit permits only the five known
+posters to request this enhancement and continues to reject legacy inline
+interception of destination links. No dependencies were added; secondary pages
+and their existing video behavior are untouched.
+
+Files changed: `index.html`, `assets/css/video.css`,
+`assets/js/modules/video.js`, `bin/check`, `tests/home-video.mjs`, `README.md`
+and this document. The dialog uses existing palette tokens and no animations.
+The privacy-enhanced YouTube embed permits inline mobile playback. Its minimum
+height follows [YouTube's player requirements](https://developers.google.com/youtube/player_parameters).
+Focus containment and native Escape dismissal use the platform's
+[`dialog` behavior](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog).
+
+Verification: all five source/destination mappings opened in the in-app browser;
+actual introduction and Alex Finn playback was observed. Close removed the
+iframe, restored focus and returned to the identical scroll offset. Space-key
+activation worked. The Black Turq palette propagated to the dialog border.
+Desktop (1440 × 900), mobile (390 × 844), 320px, tablet 768px and landscape
+844 × 390 checks found no page or dialog horizontal overflow after correcting
+an aspect-ratio/minimum-height interaction on narrow screens. Close remained
+onscreen. Desktop/mobile captures were reviewed; scratch captures stay outside
+the public repository. Only the existing localhost analytics warning appeared.
+
+Preflight, HTML validation, link audit and public packaging passed. New
+dependency-free tests cover lazy loading, all five IDs, close cleanup, focus and
+scroll restoration, Space/modified clicks, backdrop drag protection, invalid
+URLs and missing/failed dialog support. Static fallback checks and motion-free
+CSS checks supplement the existing theme/reduced-motion regressions. Browser
+native Escape/Tab default actions are not dispatched by the current testing
+tool, so these were not claimed as end-to-end verified; no custom keyboard trap
+was added to compensate. A physical keyboard/screen-reader pass and real-device
+Safari testing remain outside this verification. JavaScript-disabled and
+reduced-motion assertions for this slice are source/unit checks, not new browser
+setting captures.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation

@@ -61,6 +61,11 @@ Dir.chdir(root) do
   abort "Homepage has an empty or JavaScript-only link" if hrefs.any? { |href| href.empty? || href.match?(/\Ajavascript:/i) }
 
   # A single homepage-wide policy prevents isolated CTA/footer regressions.
+  # Only these five linked posters may enhance into the homepage cinema.
+  video_ids = %w[F7fe9pa8OeE 9SDkU5VDQEQ 5JPYJfN7HY0 qBKMe8AatY0 KO2T0oET9go]
+  video_hrefs = video_ids.map { |id| "https://www.youtube.com/watch?v=#{id}" }
+  cinema_links = tags.select { |name, link| name == "a" && link.key?("data-video-dialog") }.map(&:last)
+  abort "Only the five YouTube posters may open the cinema" unless cinema_links.map { |link| link["href"] } == video_hrefs && cinema_links.all? { |link| link["class"] == "video__facade" && link["data-video-dialog"] == "true" }
   link_counts = Hash.new(0)
   tags.select { |name, _attributes| name == "a" }.each do |_name, link|
     href = link.fetch("href", "")
@@ -83,7 +88,7 @@ Dir.chdir(root) do
       abort "Keep #{kind} link behavior unchanged: #{href}" if link.key?("target")
     end
   end
-  puts "PASS: all #{link_counts[:destination]} homepage destinations open safe, labeled new tabs; #{link_counts[:iso]} ISO downloads, #{link_counts[:same_page]} home/section links and #{link_counts[:email]} email link retain native behavior."
+  puts "PASS: #{link_counts[:destination]} safe, labeled new-tab destinations/fallbacks (only five video posters may enhance into the cinema); #{link_counts[:iso]} ISO downloads, #{link_counts[:same_page]} home/section links and #{link_counts[:email]} email link retain native behavior."
 
   resources = tags.flat_map { |_name, attributes| attributes.values_at("href", "src") }.compact
   local_paths = resources.select { |value| value.start_with?("/") && !value.start_with?("//") }.map { |value| value.split(/[?#]/, 2).first }.uniq
@@ -94,7 +99,6 @@ Dir.chdir(root) do
     abort "Missing homepage link/asset: #{path}" unless exists
   end
 
-  video_ids = %w[F7fe9pa8OeE 9SDkU5VDQEQ 5JPYJfN7HY0 qBKMe8AatY0 KO2T0oET9go]
   video_ids.each do |id|
     abort "Missing static video link: #{id}" unless hrefs.include?("https://www.youtube.com/watch?v=#{id}")
   end
@@ -138,5 +142,6 @@ Dir.chdir(root) do
 
   puts run!("node", "tests/home-themes.mjs").strip
   puts run!("node", "tests/home-reduced-motion.mjs").strip
+  puts run!("node", "tests/home-video.mjs").strip
   puts "PASS: Ruby/JS syntax, whitespace, public-file guard, #{licenses.length} license notices, #{ids.length} unique IDs, #{local_paths.length} local targets, five videos and static content."
 end
