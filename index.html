@@ -25,6 +25,7 @@
 
     <link rel="canonical" href="https://omarchy.org/">
     <link rel="icon" href="/assets/images/favicon.png">
+    <link rel="preload" as="image" href="/brand/omarchy-wordmark.svg">
 
     <script src="/assets/js/theme-preference.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/css/reset.css">
@@ -107,7 +108,9 @@
       <section class="hero" aria-labelledby="hero-heading">
         <div class="hero__grid sm-container">
           <div class="hero__masthead">
-            <img class="hero__wordmark" src="/brand/omarchy-wordmark.svg" width="4131" height="950" alt="Omarchy">
+            <div class="hero__wordmark-frame">
+              <img class="hero__wordmark" src="/brand/omarchy-wordmark.svg" width="4131" height="950" alt="Omarchy" fetchpriority="high">
+            </div>
             <p class="hero__support">Beautiful, fun &amp; opinionated Linux by <a href="https://dhh.dk" target="_blank" rel="noopener noreferrer" aria-label="DHH (opens in a new tab)">DHH</a>.</p>
           </div>
 

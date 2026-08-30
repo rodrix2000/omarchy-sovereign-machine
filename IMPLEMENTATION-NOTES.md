@@ -347,6 +347,43 @@ checks and the 517-file allowlisted preview packaging passed. Reduced-motion
 and no-JavaScript coverage for this slice is source/regression coverage, not a
 new physical-device or screen-reader audit. Screenshots remain outside source.
 
+### Phosphor wordmark entrance — 2026-08-30
+
+Baseline: `54072991167d6b5ce6c977e7795642fd49c037db`.
+The current [official homepage](https://omarchy.org/) and its
+[`logo.js` module](https://omarchy.org/assets/js/modules/logo.js) were reviewed:
+the upstream ASCII wordmark uses a one-shot laser-etch effect. This proposal
+adapts that writing-in idea to the existing official SVG rather than enabling
+the canvas/WASM runtime or changing the identity artwork.
+
+The hero wordmark reveals left to right in 81 pixel-column steps, with a brief
+cyan phosphor glow and a subtle cyan/gold scan edge. Writing completes at
+1520ms; the glow settles to the untouched green SVG at 1650ms. Only the hero
+wordmark animates. Its fixed aspect-ratio frame reserves the final dimensions,
+and the supporting copy, navigation and download actions remain visible.
+
+The existing first-paint script opts in before CSS renders, independently of
+storage access. The effect is CSS-driven and does not require the main module.
+A finite 1800ms cleanup removes the opt-in and preference listener, so slow
+assets or failed modules fall back to the static mark. Reduced motion and
+deep links bypass the entrance, and a motion-preference change stops it.
+The default HTML/CSS shows the complete accessible image without JavaScript.
+The original SVG is preloaded; no image, runtime dependency or rendering loop
+was added. Theme changes and scrolling do not replay the entrance.
+
+Files changed: `index.html`, `assets/css/home.css`,
+`assets/js/theme-preference.js`, `tests/home-wordmark.mjs`, `bin/check`, and this
+document. The new regression test covers timing, default visibility, stable
+dimensions, reduced motion, preference changes, deep links, blocked storage,
+and unsupported APIs. Source/HTML/whitespace checks passed. Browser captures
+reviewed the reveal in progress at 1440px and 390px and its settled state;
+320, 390, 768, 1024 and 1440px checks found no horizontal overflow. A temporary
+local server with `script-src 'none'` verified the full static logo, content and
+links with all scripts blocked. Reduced motion is covered by CSS/source and
+unit tests, not a new physical-device preference capture. Normal-page console
+checks showed only the existing localhost analytics notice. Review captures
+stay outside the public checkout.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation

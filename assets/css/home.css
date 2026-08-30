@@ -341,10 +341,65 @@ html:has(.home) {
   text-align: center;
 }
 
+.hero__wordmark-frame {
+  aspect-ratio: 4131 / 950;
+  margin-inline: auto;
+  position: relative;
+  width: min(32rem, 82vw);
+}
+
 .hero .hero__wordmark {
   display: block;
-  margin-inline: auto;
-  width: min(32rem, 82vw);
+  width: 100%;
+}
+
+/* Optional, one-shot phosphor writing. Without the early JS opt-in, the
+   original image is fully visible. Never animate the header/footer identity. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-wordmark-intro] .hero__wordmark {
+    animation:
+      wordmark-write 1400ms steps(81, end) 120ms both,
+      wordmark-phosphor 1650ms ease-out both;
+  }
+
+  html[data-wordmark-intro] .hero__wordmark-frame::after {
+    animation: wordmark-scan 1400ms linear 120ms both;
+    background: linear-gradient(transparent, var(--sm-gold-soft) 25%, var(--sm-cyan-soft) 70%, transparent);
+    box-shadow: 0 0 10px var(--sm-cyan);
+    content: '';
+    inset-block: 2%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+@keyframes wordmark-write {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+
+@keyframes wordmark-phosphor {
+  0% {
+    filter: drop-shadow(0 0 5px var(--sm-cyan));
+    opacity: 0.25;
+  }
+  65% {
+    filter: drop-shadow(0 0 3px var(--sm-cyan));
+    opacity: 1;
+  }
+  100% {
+    filter: none;
+    opacity: 1;
+  }
+}
+
+@keyframes wordmark-scan {
+  0% { left: 0; opacity: 0; }
+  6% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { left: 100%; opacity: 0; }
 }
 
 .hero__copy {
@@ -1614,7 +1669,7 @@ html:has(.home) {
     padding-block: 2.5rem 3rem;
   }
 
-  .hero .hero__wordmark {
+  .hero__wordmark-frame {
     width: min(24rem, 88vw);
   }
 

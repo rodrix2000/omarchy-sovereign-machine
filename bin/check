@@ -141,6 +141,7 @@ Dir.chdir(root) do
   abort "Required no-JavaScript homepage content is missing" unless required_text.all? { |phrase| text.include?(phrase) }
 
   puts run!("node", "tests/home-themes.mjs").strip
+  puts run!("node", "tests/home-wordmark.mjs").strip
   puts run!("node", "tests/home-reduced-motion.mjs").strip
   puts run!("node", "tests/home-video.mjs").strip
   puts "PASS: Ruby/JS syntax, whitespace, public-file guard, #{licenses.length} license notices, #{ids.length} unique IDs, #{local_paths.length} local targets, five videos and static content."
