@@ -42,7 +42,7 @@ function harness({ supported = true, missing = false, failOpen = false, href } =
     }
     fire(type, options = {}) {
       const event = {
-        target: this, button: 0, defaultPrevented: false,
+        type, target: this, button: 0, defaultPrevented: false,
         preventDefault() { this.defaultPrevented = true; }, ...options,
       };
       for (const callback of this.listeners.get(type) ?? []) callback(event);
@@ -135,6 +135,34 @@ assert.equal(app.dialog.open, false);
 app.facades[0].fire('keydown', { key: ' ', metaKey: true });
 assert.equal(app.dialog.open, false);
 
+for (const [type, options] of [
+  ['click', {}], ['click', { detail: 0 }], ['click', { metaKey: true }],
+  ['click', { ctrlKey: true }], ['click', { shiftKey: true }], ['auxclick', { button: 1 }],
+]) {
+  app.facades[0].click();
+  const nativeClose = app.dialog.close;
+  app.dialog.close = () => {
+    assert.equal(app.screen.children.length, 0, 'YouTube handoff must stop playback before the queued close event');
+    nativeClose();
+  };
+  const handoff = app.youtube.fire(type, options);
+  app.dialog.close = nativeClose;
+  assert.equal(handoff.defaultPrevented, false, 'Keep native new-tab navigation, including keyboard and modified clicks');
+  assert.equal(app.youtube.href, app.facades[0].href);
+  assert.equal(app.dialog.open, false);
+  assert.equal(app.screen.children.length, 0);
+  assert.equal(app.active(), app.facades[0]);
+  assert.equal(app.restored.at(-1).top, 1375);
+}
+
+app.facades[0].click();
+app.youtube.fire('click', { defaultPrevented: true });
+app.youtube.fire('auxclick', { button: 1, defaultPrevented: true });
+app.youtube.fire('auxclick', { button: 2 });
+assert.equal(app.dialog.open, true, 'Canceled navigation and right-click must not close playback');
+assert.equal(app.screen.children.length, 1);
+app.dialog.close();
+
 app.facades[0].click();
 app.dialog.fire('pointerdown', { clientX: 500, clientY: 150 });
 app.dialog.fire('click', { clientX: 10, clientY: 10 });
@@ -152,4 +180,4 @@ for (const options of [{ supported: false }, { missing: true }, { failOpen: true
   if (!options.failOpen) assert.equal(fallback.facades[0].getAttribute('role'), null);
 }
 
-console.log('PASS: five lazy cinema players, safe native fallbacks, button/Space semantics, close cleanup, focus/scroll restoration, backdrop dismissal, unavailable-dialog fallback, and motion-free chrome.');
+console.log('PASS: five lazy cinema players, safe native fallbacks, button/Space semantics, immediate YouTube handoff cleanup, close cleanup, focus/scroll restoration, backdrop dismissal, unavailable-dialog fallback, and motion-free chrome.');

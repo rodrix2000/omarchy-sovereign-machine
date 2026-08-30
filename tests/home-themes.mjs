@@ -21,6 +21,8 @@ assert.match(html, /<label class="site-theme" hidden>/, 'Do not expose a nonfunc
 assert.match(html, /<select[^>]*aria-label="Site color theme"[^>]*title="Theme: Sovereign \(original\)"/);
 assert.match(html, /<svg class="site-theme__icon"[^>]*aria-hidden="true"/);
 assert.match(palettes, /\.site-theme:has\(select:focus-visible\)/, 'The icon wrapper must expose native select focus');
+assert.match(palettes, /\.site-theme\s*\{[^}]*border: 1px solid var\(--sm-line\);/, 'The theme control must remain discoverable before hover or focus');
+assert.match(palettes, /\.site-theme\s*\{[^}]*height: 2\.75rem;[^}]*width: 2\.75rem;/, 'Keep the compact theme control at a 44px touch target');
 assert.match(html, /data-theme-status aria-live="polite"/);
 assert.match(html, /class="sm-button site-nav__cta"/, 'Only the navbar CTA uses the compact outline treatment');
 assert.match(html, /class="sm-button sm-button--primary" href="https:\/\/iso\.omarchy\.org\//, 'The hero keeps its larger filled download button');

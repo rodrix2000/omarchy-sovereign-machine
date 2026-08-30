@@ -286,6 +286,67 @@ Safari testing remain outside this verification. JavaScript-disabled and
 reduced-motion assertions for this slice are source/unit checks, not new browser
 setting captures.
 
+### Compact Omarchs closing section — 2026-08-30
+
+Baseline: `914edc488541a3d1ee518960a60c1bc729c79ea9`.
+The "Take the throne" section is now a smaller closing accent. At 1440px its
+height is 242px instead of 370px; at 390px it is approximately 225px instead of
+354px. The jester, heading, gaps and CTA styling scale down together, while the
+CTA retains a 44px height. All copy, official jester artwork, link destinations
+and safe new-tab behavior remain unchanged.
+
+The large perspective-floor image is replaced in this section only by a faint
+code-native grid, softly fading toward the copy, over cyan/gold illumination
+and dark glass. Colors derive from the existing theme tokens, including the
+grid itself. No new assets, JavaScript, animations or dependencies are added.
+Files changed: `assets/css/home.css` and this document.
+
+In-app browser checks at 320, 390, 768, 1024 and 1440px found no page/section
+horizontal overflow, missing artwork or clipped controls. Desktop/mobile
+captures were reviewed; the CSS-only background also followed a real selector
+change to Catppuccin and back to Sovereign. The CTA destination and new-tab
+attributes were rechecked. Page identity/content and console checks passed
+apart from the existing localhost analytics warning. `ruby bin/check`,
+`html-validate@10.4.0` and whitespace checks passed. No new physical-device or
+screen-reader audit was performed for this CSS-only adjustment.
+
+### Final usability polish — 2026-08-30
+
+Baseline: `914edc488541a3d1ee518960a60c1bc729c79ea9`, including the compact
+Omarchs section above. The approved visual review resulted in three focused
+adjustments, with no change to the page structure, copy, assets or dependencies:
+
+- The cinema's native YouTube link immediately removes the embedded player
+  and closes the dialog, preserving its real URL and safe new-tab behavior.
+  Primary/keyboard clicks, modified clicks and middle-click are covered;
+  canceled navigation and right-click leave the player alone. The existing
+  close cleanup restores focus and scroll. No timer or animation was added.
+- Destination links and the compact Omarchs CTA use 12px labels and minimum
+  44px heights. Command text has a 13px minimum across phone and tablet sizes.
+  The closing section remains approximately 225px at 390px and 242px at 1440px.
+- The 44px theme-icon control has a faint palette-aware border and glass
+  background even before hover. Its native select, tooltip and focus ring are
+  preserved; the large dropdown label is not reintroduced.
+
+Files changed: `assets/css/home.css`, `assets/css/home-themes.css`,
+`assets/js/modules/video.js`, `tests/home-video.mjs`, `tests/home-themes.mjs`,
+and this document. Regression tests guard immediate playback teardown without
+canceling navigation and the theme control's persistent outline/touch size.
+
+Local in-app browser checks covered 320, 390, 768, 1024 and 1440px with no
+page/section overflow. Reviewed desktop/mobile captures, measured 44px targets,
+and exercised Black Gold selection, reload persistence and Sovereign reset.
+Actual video playback followed by the YouTube link left no iframe, closed the
+dialog and restored focus to the poster; normal close/reopen also passed.
+New-tab creation could not be independently reconfirmed through the browser
+tool in this pass (the unchanged baseline behaved the same); the native link
+attributes and uncanceled click/auxclick paths are covered by source/unit tests.
+There were no relevant application console errors, only the existing localhost
+analytics notice. `ruby bin/check`, `html-validate@10.4.0 index.html`, whitespace
+checks and the 517-file allowlisted preview packaging passed. Reduced-motion
+and no-JavaScript coverage for this slice is source/regression coverage, not a
+new physical-device or screen-reader audit. Screenshots remain outside source.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation

@@ -56,6 +56,16 @@ function setupCinema() {
   });
   close.addEventListener('click', () => dialog.close());
 
+  const leaveForYouTube = (event) => {
+    if (event.defaultPrevented || (event.type === 'auxclick' && event.button !== 1)) return;
+    // Stop immediately before the new tab can background this page; the native
+    // close event still restores focus/scroll. Do not cancel the real link.
+    screen.replaceChildren();
+    dialog.close();
+  };
+  youtube.addEventListener('click', leaveForYouTube);
+  youtube.addEventListener('auxclick', leaveForYouTube);
+
   const outside = (event) => {
     const rect = dialog.getBoundingClientRect();
     return event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom);

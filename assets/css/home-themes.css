@@ -105,8 +105,8 @@ html[data-site-theme]:not([data-site-theme="sovereign"]) .home {
 
 .site-theme {
   align-items: center;
-  background: transparent;
-  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--sm-panel) 80%, transparent);
+  border: 1px solid var(--sm-line);
   border-radius: 2px;
   display: grid;
   height: 2.75rem;

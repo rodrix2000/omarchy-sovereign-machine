@@ -997,7 +997,7 @@ html:has(.home) {
 .command-terminal pre {
   color: var(--sm-gold);
   font-family: var(--sm-font-interface);
-  font-size: clamp(0.72rem, 1.05vw, 0.92rem);
+  font-size: clamp(0.8125rem, 1.05vw, 0.92rem);
   line-height: 2;
   margin: 0;
   overflow-x: auto;
@@ -1050,9 +1050,10 @@ html:has(.home) {
 .destination-row__actions a {
   align-items: center;
   display: inline-flex;
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   gap: 0.65rem;
   letter-spacing: 0.08em;
+  min-height: 2.75rem;
   text-decoration: none;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1134,55 +1135,74 @@ html:has(.home) {
 
 .omarch-coda {
   background:
-    radial-gradient(ellipse 62% 110% at 80% 50%, var(--sm-aurora-gold), transparent 72%),
-    radial-gradient(ellipse 42% 90% at 15% 38%, var(--sm-aurora-green), transparent 72%),
-    linear-gradient(90deg, var(--sm-deep) 0%, transparent 58%),
-    url('/assets/images/home/perspective-grid.svg') center 31% / cover no-repeat;
-  border-block: 1px solid color-mix(in srgb, var(--sm-gold) 12%, transparent);
+    radial-gradient(ellipse 50% 110% at 85% 60%, var(--sm-aurora-gold), transparent 75%),
+    radial-gradient(ellipse 36% 100% at 12% 40%, var(--sm-aurora-cyan), transparent 78%),
+    linear-gradient(180deg, var(--sm-void), var(--sm-deep));
+  border-block: 1px solid var(--sm-line);
   overflow: hidden;
   position: relative;
+}
+
+/* A quiet, palette-aware workstation grid, not another full-scale hero. */
+.omarch-coda::before {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--sm-cyan) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--sm-cyan) 7%, transparent) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  content: '';
+  inset: 0;
+  mask-image: linear-gradient(90deg, transparent 30%, #000);
+  pointer-events: none;
+  position: absolute;
 }
 
 .omarch-coda__inner {
   align-items: center;
   display: grid;
-  gap: 3rem;
-  grid-template-columns: 13rem minmax(0, 1fr) auto;
-  min-height: 23rem;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
+  min-height: 15rem;
+  padding-block: 2.25rem;
+  position: relative;
 }
 
 .omarch-coda__inner > img {
-  height: 11rem;
+  height: 6.5rem;
   object-fit: contain;
-  width: 11rem;
+  width: 6.5rem;
 }
 
 .omarch-coda h2 {
   font-family: var(--sm-font-display);
-  font-size: clamp(2rem, 3.4vw, 3.5rem);
+  font-size: clamp(1.6rem, 2.2vw, 2.25rem);
   letter-spacing: -0.05em;
-  line-height: 1;
+  line-height: 1.15;
   margin: 0;
   text-transform: uppercase;
 }
 
 .omarch-coda__inner > div > p {
   color: var(--sm-muted);
-  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  margin: 0.625rem 0 0;
 }
 
 .omarch-coda .sm-button {
-  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.85rem;
 }
 
 .omarch-coda__signoff {
   align-self: end;
   color: var(--sm-gold);
   font-family: var(--sm-font-interface);
-  font-size: 0.66rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  margin: 0 0 3rem;
+  margin: 0 0 0.25rem;
   text-transform: uppercase;
 }
 
@@ -1505,12 +1525,13 @@ html:has(.home) {
   }
 
   .omarch-coda__inner {
-    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 0.75rem 1.5rem;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
   }
 
   .omarch-coda__signoff {
     grid-column: 2;
-    margin-top: -1.5rem;
+    margin: 0;
   }
 
   .home-footer__grid {
@@ -1765,7 +1786,6 @@ html:has(.home) {
   }
 
   .command-terminal pre {
-    font-size: 0.7rem;
     line-height: 1.9;
     padding: 1.5rem 1rem 2rem;
   }
@@ -1803,19 +1823,19 @@ html:has(.home) {
   }
 
   .omarch-coda__inner {
-    gap: 1.5rem;
-    grid-template-columns: 5.5rem 1fr;
-    min-height: 22rem;
-    padding-block: 3rem;
+    gap: 0.75rem 1rem;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    min-height: 0;
+    padding-block: 1.75rem;
   }
 
   .omarch-coda__inner > img {
-    height: 5.5rem;
-    width: 5.5rem;
+    height: 4rem;
+    width: 4rem;
   }
 
   .omarch-coda h2 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 
   .omarch-coda__inner > div > p {
@@ -1823,13 +1843,11 @@ html:has(.home) {
   }
 
   .omarch-coda .sm-button {
-    font-size: 0.58rem;
-    min-height: 2.8rem;
-    padding: 0.7rem;
+    padding-inline: 0.7rem;
   }
 
   .omarch-coda__signoff {
-    grid-column: 1 / -1;
+    grid-column: 2;
     margin: 0;
   }
 
