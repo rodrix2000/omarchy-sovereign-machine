@@ -774,30 +774,50 @@ html:has(.home) {
   --theme-secondary: #b8bb26;
 }
 
+.theme-workbench[data-theme-preview="black-gold"] {
+  --theme-accent: #d7b65c;
+  --theme-secondary: #b69035;
+}
+
+.theme-workbench[data-theme-preview="black-turq"] {
+  --theme-accent: #8ce3d1;
+  --theme-secondary: #39b9af;
+}
+
+.theme-workbench[data-theme-preview="vhs-80"] {
+  --theme-accent: #e7c85b;
+  --theme-secondary: #39c5cc;
+}
+
 .theme-workbench__note {
   color: var(--sm-muted);
   font-family: var(--sm-font-interface);
   font-size: 0.68rem;
   margin: 0;
+  text-align: right;
+}
+
+.theme-workbench__fallback {
+  color: var(--sm-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
 }
 
 .theme-toolbar {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem 2rem;
-  justify-content: space-between;
+  display: grid;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
 .theme-selector {
   border: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  display: grid;
+  gap: 0.5rem 1.25rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin: 0;
   min-width: 0;
   padding: 0;
+  width: 100%;
 }
 
 .theme-selector legend {
@@ -859,6 +879,18 @@ html:has(.home) {
 
 .theme-swatch--gruvbox {
   background: #fabd2f;
+}
+
+.theme-swatch--black-gold {
+  background: #d7b65c;
+}
+
+.theme-swatch--black-turq {
+  background: #8ce3d1;
+}
+
+.theme-swatch--vhs-80 {
+  background: linear-gradient(135deg, #e57683 0% 33%, #39c5cc 33% 66%, #e7c85b 66% 100%);
 }
 
 .theme-preview {
@@ -1314,6 +1346,10 @@ html:has(.home) {
 }
 
 @media (max-width: 63.99rem) {
+  .theme-selector {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .site-nav {
     gap: 0.75rem;
     grid-template-columns: 1fr auto auto;
@@ -1695,6 +1731,10 @@ html:has(.home) {
     min-height: 4rem;
     padding: 0.5rem;
     text-align: center;
+  }
+
+  .theme-workbench__note {
+    text-align: left;
   }
 
   .command-terminal {

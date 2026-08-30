@@ -136,6 +136,7 @@ Dir.chdir(root) do
   required_text = ["Beautiful defaults.", "Total command.", "Curated with taste", "Built to be changed", "Ready for agents", "See Omarchy in motion.", "Omarchy command center", "omarchy theme list", "omarchy theme set <name>", "omarchy screenshot", "omarchy debug"]
   abort "Required no-JavaScript homepage content is missing" unless required_text.all? { |phrase| text.include?(phrase) }
 
+  puts run!("node", "tests/home-themes.mjs").strip
   puts run!("node", "tests/home-reduced-motion.mjs").strip
   puts "PASS: Ruby/JS syntax, whitespace, public-file guard, #{licenses.length} license notices, #{ids.length} unique IDs, #{local_paths.length} local targets, five videos and static content."
 end

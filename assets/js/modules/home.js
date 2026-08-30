@@ -14,6 +14,21 @@ const THEMES = {
     image: '/manual/images/gruvbox-preview.webp',
     alt: 'Gruvbox theme running across an Omarchy desktop',
   },
+  'black-gold': {
+    name: 'Black Gold',
+    image: '/assets/themes/black-gold.webp',
+    alt: 'Black Gold theme with gold accents and tiled windows on a dark Omarchy desktop',
+  },
+  'black-turq': {
+    name: 'Black Turq',
+    image: '/assets/themes/black-turq.webp',
+    alt: 'Black Turq theme with phosphor-turquoise terminals on a black Omarchy desktop',
+  },
+  'vhs-80': {
+    name: 'VHS 80',
+    image: '/assets/themes/vhs-80.webp',
+    alt: 'VHS 80 theme with retro red, cyan and yellow stripes behind dark Omarchy windows',
+  },
 };
 
 const COMMAND_TEXT = `~ > omarchy

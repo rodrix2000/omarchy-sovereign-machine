@@ -23,6 +23,10 @@ The introduction leads straight into all five featured videos, followed by one
 interactive system workspace, real theme previews, documented commands and the
 community. Text, navigation, controls and terminal output are code-native.
 
+The six-theme preview pairs Tokyo Night, Catppuccin and Gruvbox with Black Gold,
+Black Turq and VHS 80 from the official theme gallery: gold, phosphor turquoise
+and retro tape colors that complement the Sovereign Machine direction.
+
 ## Run locally
 
 Ruby is sufficient; there is no framework, package installation or build step.

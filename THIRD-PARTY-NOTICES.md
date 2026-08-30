@@ -61,6 +61,17 @@ authors. The new Typecraft, LinuxBTW and Alex Finn posters match the current
 official site's video set. All five videos link to their original YouTube pages;
 no video files are redistributed here.
 
+The homepage also features three existing screenshots from the
+[official theme gallery](https://omarchy.org/themes/):
+
+- `assets/themes/black-gold.webp`: [Black Gold by HANCORE-linux](https://github.com/HANCORE-linux/omarchy-blackgold-theme).
+- `assets/themes/black-turq.webp`: [Black Turq by HANCORE-linux](https://github.com/HANCORE-linux/omarchy-blackturq-theme).
+- `assets/themes/vhs-80.webp`: [VHS 80 by tahayvr](https://github.com/tahayvr/omarchy-vhs80-theme).
+
+These inherited screenshot files are reused unchanged, not newly licensed by
+this redesign. Theme code, screenshots and depicted content may have different
+rights; consult the original projects before independent reuse.
+
 The two project captures under `docs/screenshots/` document this redesign but
 also depict third-party marks/content. Their inclusion does not grant a new
 license to that depicted material. Other media are not covered by Rudy's MIT

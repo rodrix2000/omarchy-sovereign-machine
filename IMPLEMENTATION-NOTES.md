@@ -129,6 +129,43 @@ The homepage remained open throughout, with no horizontal overflow. The only
 console warning was the existing analytics localhost notice. ISO downloads
 and the email application were deliberately not activated during testing.
 
+### Six-theme homepage preview — 2026-08-30
+
+Starting from `99cdf166a88d850d70bf37a806417d186ee59d44`, the theme selector adds
+Black Gold, Black Turq and VHS 80 alongside Tokyo Night, Catppuccin and Gruvbox.
+All three additions were checked against the current official theme gallery
+and their real screenshots reviewed before selection. Gold, phosphor turquoise
+and retro VHS stripes extend the existing Sovereign Machine palette without
+changing the site's overall theme or installing anything on visitors' systems.
+Tokyo Night remains the default.
+
+Changes are in `index.html`, `assets/css/home.css`, `assets/js/modules/home.js`,
+`tests/home-themes.mjs`, `bin/check`, this document, `README.md` and
+`THIRD-PARTY-NOTICES.md`. The three WebP assets already existed in the repository
+and remain unchanged. There are no new assets, dependencies or animations.
+Six native radio controls form one desktop row and two rows of three below
+1024px. Selection updates the real screenshot, theme accent, descriptive alt
+text and polite live status. Without JavaScript, six static full-size screenshot
+links accompany the default preview; each opens a safe, labeled new tab.
+
+The new regression test runs the actual theme-selection module for all six
+choices, checks screenshot existence and no-JavaScript links, and guards the
+default selection and markup/module mapping. The complete preflight, HTML
+validation, reduced-motion regression and link audit pass. The six fallback
+links bring the source audit to 49 new-tab destinations; the original three ISO
+links, ten home/section links and one email link remain unchanged.
+
+Local browser checks exercised all six selections at 1440px and 390px, with
+additional layout checks at 768px and 320px. Images loaded, labels and status
+matched, controls did not overlap, and there was no horizontal overflow. Target
+heights were at least 48px on desktop/tablet and 64px on mobile. Desktop and
+mobile screenshots were visually reviewed. The browser reported no errors,
+only the pre-existing localhost analytics warning. Native radio semantics and
+visible focus styles are preserved; this pass could not conclusively recheck
+keyboard default actions because the browser test interface did not advance
+native controls with Arrow, Space or Tab. No custom keyboard interception was
+added. No-JavaScript fallback coverage in this pass is source-based.
+
 ### Push-to-deploy automation — 2026-08-30
 
 Starting from `f728d6ab0d47da60b49269affa7cced2d2bd94e7`, the existing validation
