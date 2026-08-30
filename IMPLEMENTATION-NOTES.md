@@ -46,6 +46,29 @@ There is one interactive workstation, not a repeated hero console. Themes use
 real Tokyo Night, Catppuccin and Gruvbox screenshots. Community links are open
 rows and groups. The purple-and-gold Omarchs jester supplies the closing joke.
 
+### Navigation identity refinement — 2026-08-30
+
+Starting from `77d2538c654bd714ecc3bb2b39cefa6eb01de61b`, the navbar uses only
+the official square mark, removing the repeated wordmark after visual review.
+The symbol is 36px on desktop/tablet and 28px on mobile, centered in a minimum
+44px-square home-link target. Its accessible name remains "Omarchy home".
+These size rules are scoped to the navbar; hero and footer sizing is unchanged.
+
+Following review, the footer wordmark was restored to official green
+(`#9ece6a`), matching the hero and square symbols. It uses the original SVG
+directly; the temporary cyan tint, mask styles and wrapper were removed.
+The icon-only header is unchanged. No JavaScript or dependencies were added.
+
+The local preview was checked at 1440px, 846px, 390px and 320px viewport widths:
+brand assets loaded, and the controls did not overlap or cause horizontal
+overflow. Mobile menu opening, Escape dismissal, focus return, section navigation
+and the home link were checked. Keyboard focus
+on the brand retains its cyan outline. `ruby bin/check` (including static content,
+local targets and reduced motion) and `html-validate@10.4.0 index.html` passed.
+Browser logs showed no errors; only the existing analytics warning that ignores
+localhost. Review captures remain outside the public checkout. Publishing this
+refinement to the live preview remains a separate, explicit deployment step.
+
 ## Verification evidence
 
 The reviewed design was visually checked at 1440px and 390px, with overflow

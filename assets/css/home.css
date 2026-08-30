@@ -179,6 +179,18 @@ html:has(.home) {
   width: 3.5rem;
 }
 
+.site-brand--nav {
+  justify-content: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+.site-brand--nav .site-brand__symbol {
+  height: 2.25rem;
+  margin: 0;
+  width: 2.25rem;
+}
+
 .site-nav__links {
   align-items: stretch;
   display: flex;
@@ -1492,6 +1504,11 @@ html:has(.home) {
     width: 2.9rem;
   }
 
+  .site-brand--nav .site-brand__symbol {
+    height: 1.75rem;
+    width: 1.75rem;
+  }
+
   .site-nav__cta {
     min-height: 2.6rem;
     padding: 0.65rem 0.9rem;
@@ -1790,10 +1807,6 @@ html:has(.home) {
 }
 
 @media (max-width: 23rem) {
-  .site-brand span {
-    display: none;
-  }
-
   .hero__actions {
     grid-template-columns: 1fr;
   }
